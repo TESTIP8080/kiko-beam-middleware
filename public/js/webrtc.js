@@ -322,8 +322,13 @@ class KikoWebRTC {
       recognition._manualStop = false; // Reset manual stop flag
       if (!recognition._isRunning) {
         try {
-          recognition.start();
-          updateRecognitionStatus('Listening...');
+          // Add delay before restarting
+          setTimeout(() => {
+            if (recognition && !recognition._isRunning) {
+              recognition.start();
+              updateRecognitionStatus('Listening...');
+            }
+          }, 1000);
         } catch(e) {
           console.error("Error restarting speech recognition:", e);
         }

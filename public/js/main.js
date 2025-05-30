@@ -17,6 +17,13 @@ window.addEventListener('unhandledrejection', function(event) {
 // Global state
 let isCallActive = false;
 
+// Weather cache
+let weatherCache = {
+  data: null,
+  timestamp: 0,
+  expiry: 5 * 60 * 1000 // 5 minutes
+};
+
 // Event listeners
 document.addEventListener('DOMContentLoaded', function() {
   // Verify DOM elements are loaded
@@ -643,5 +650,59 @@ function toggleVoiceInput() {
     }
   }
 }
+
+// Update weather display with caching
+function updateWeatherDisplay(weather) {
+  if (!weather) return;
+  
+  // Cache the weather data
+  weatherCache.data = weather;
+  weatherCache.timestamp = Date.now();
+  
+  currentWeather = weather;
+  const time = new Date().toLocaleTimeString('ru-RU', { 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: false 
+  });
+  
+  weatherInfo.innerHTML = `${time} | ${weather.city}: ${weather.temp}°C, ${weather.description}`;
+  weatherWidget.classList.add('active');
+}
+
+// Get weather with caching
+async function getWeather() {
+  // Check cache first
+  if (weatherCache.data && (Date.now() - weatherCache.timestamp < weatherCache.expiry)) {
+    return weatherCache.data;
+  }
+  
+  try {
+    const response = await fetch('/api/weather');
+    const weather = await response.json();
+    updateWeatherDisplay(weather);
+    return weather;
+  } catch (error) {
+    console.error('Error fetching weather:', error);
+    return null;
+  }
+}
+
+// Update time every minute
+function updateTime() {
+  const time = new Date().toLocaleTimeString('ru-RU', { 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: false 
+  });
+  
+  if (currentWeather) {
+    weatherInfo.innerHTML = `${time} | ${currentWeather.city}: ${currentWeather.temp}°C, ${currentWeather.description}`;
+  }
+}
+
+// Start time updates
+setInterval(updateTime, 60000);
+updateTime(); // Initial update
 
 console.log('🌌 KIKO MATRIX main systems loaded. Quantum initialization pending...');
