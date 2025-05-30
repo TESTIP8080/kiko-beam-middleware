@@ -130,10 +130,13 @@ function playVideo(url) {
   youtubeContainer.style.display = 'flex';
   videoArea.classList.add('active');
   
-  // Updated URL with proper parameters for Vercel
-  const embedUrl = url.replace('watch?v=', 'embed/') + 
-    '?autoplay=1&enablejsapi=1&origin=' + window.location.origin + 
-    '&rel=0&modestbranding=1&playsinline=1&allow=autoplay';
+  // Get current origin for YouTube embed
+  const currentOrigin = window.location.origin;
+  console.log("Current origin:", currentOrigin);
+  
+  // Build embed URL with proper parameters
+  const videoId = url.split('v=')[1];
+  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1&origin=${currentOrigin}&rel=0&modestbranding=1&playsinline=1&allow=autoplay`;
     
   videoIframe.src = embedUrl;
   youtubePlayerState = 'playing';
