@@ -35,9 +35,6 @@ class KikoWebRTC {
     }
     
     try {
-      // Set call active flag
-      window.isCallActive = true;
-      
       // IMMEDIATELY show teleport area and start animation
       const teleportArea = document.getElementById('teleport-area');
       if (teleportArea) {
@@ -51,18 +48,11 @@ class KikoWebRTC {
         }
       }
       
-      // Stop speech recognition and clear queue
-      if (recognition && recognition._isRunning) {
+      // Stop speech recognition and clear queue only for teleport kiko
+      if (contactName === 'KiKo 2' && recognition && recognition._isRunning) {
         recognition.stop();
+        clearSpeechQueue();
       }
-      clearSpeechQueue();
-      
-      // Disable microphone
-      if (window.voiceBtn) {
-        window.voiceBtn.textContent = '🎤';
-        window.voiceBtn.disabled = true;
-      }
-      updateRecognitionStatus('Microphone off');
       
       // Generate room URL
       this.roomName = roomId || `kiko-${Date.now()}`;
@@ -273,9 +263,6 @@ class KikoWebRTC {
   async endCall() {
     console.log('🛑 Ending hyperjump...');
     
-    // Reset call active flag
-    window.isCallActive = false;
-    
     // Stop sounds
     this.soundController.stopAll();
     
@@ -336,13 +323,6 @@ class KikoWebRTC {
         console.error("Error restarting speech recognition:", e);
       }
     }
-
-    // Enable microphone button
-    if (window.voiceBtn) {
-      window.voiceBtn.textContent = '🎤';
-      window.voiceBtn.disabled = false;
-    }
-    updateRecognitionStatus('Listening...');
   }
   
   toggleAudio() {
