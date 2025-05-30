@@ -666,8 +666,10 @@ function updateWeatherDisplay(weather) {
     hour12: false 
   });
   
-  weatherInfo.innerHTML = `${time} | ${weather.city}: ${weather.temp}°C, ${weather.description}`;
-  weatherWidget.classList.add('active');
+  if (weatherInfo) {
+    weatherInfo.innerHTML = `${time} | ${weather.city}: ${weather.temp}°C, ${weather.description}`;
+    weatherWidget.classList.add('active');
+  }
 }
 
 // Get weather with caching
@@ -679,11 +681,22 @@ async function getWeather() {
   
   try {
     const response = await fetch('/api/weather');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     const weather = await response.json();
-    updateWeatherDisplay(weather);
-    return weather;
+    if (weather && weather.city) {
+      updateWeatherDisplay(weather);
+      return weather;
+    } else {
+      throw new Error('Invalid weather data received');
+    }
   } catch (error) {
     console.error('Error fetching weather:', error);
+    // Return cached data if available, even if expired
+    if (weatherCache.data) {
+      return weatherCache.data;
+    }
     return null;
   }
 }
@@ -706,3 +719,47 @@ setInterval(updateTime, 60000);
 updateTime(); // Initial update
 
 console.log('🌌 KIKO MATRIX main systems loaded. Quantum initialization pending...');
+
+// Add microphone restart button
+function addRestartMicButton() {
+  const micButton = document.createElement('button');
+  micButton.id = 'restart-mic-btn';
+  micButton.innerHTML = '🔄 Restart Microphone';
+  micButton.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    padding: 10px 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: none;
+  `;
+  
+  micButton.addEventListener('click', () => {
+    if (recognition) {
+      try {
+        recognition.stop();
+        setTimeout(() => {
+          recognition.start();
+          updateRecognitionStatus('Listening...');
+          micButton.style.display = 'none';
+        }, 1000);
+      } catch (e) {
+        console.error('Error restarting microphone:', e);
+      }
+    }
+  });
+  
+  document.body.appendChild(micButton);
+  
+  // Show button if recognition fails
+  window.addEventListener('error', (e) => {
+    if (e.message.includes('recognition') || e.message.includes('microphone')) {
+      micButton.style.display = 'block';
+    }
+  });
+}

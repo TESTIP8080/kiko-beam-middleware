@@ -69,7 +69,26 @@ class GoogleSpeechRecognition {
       // Read volume and pass to UI update function
       const dataArray = new Uint8Array(analyser.frequencyBinCount);
       
-      // Create ScriptProcessor for audio data processing
+      // Create AudioWorkletNode instead of ScriptProcessorNode
+      const workletNode = new AudioWorkletNode(this.audioContext, 'volume-meter');
+      
+      // Connect nodes
+      this.audioInput.connect(analyser);
+      analyser.connect(workletNode);
+      workletNode.connect(this.audioContext.destination);
+      
+      // Handle volume data
+      workletNode.port.onmessage = (event) => {
+        if (event.data.volume) {
+          this.volumeMeter = event.data.volume;
+          this._updateVolumeIndicator();
+        }
+      };
+      
+      this.volumeMeterNode = workletNode;
+      
+      // Start recording
+      this.chunks = [];
       this.recorder = this.audioContext.createScriptProcessor(4096, 1, 1);
       
       // Connect microphone to processor
@@ -91,15 +110,6 @@ class GoogleSpeechRecognition {
         // Call volume update function
         this.volumeMeter(level);
       }, 100);
-      
-      // Start recording
-      this.chunks = [];
-      this.recorder.onaudioprocess = (e) => {
-        if (!this._isRunning) return;
-        
-        // Save recorded data
-        this.chunks.push(e.inputBuffer.getChannelData(0).slice());
-      };
       
       // Save stream for later closing
       this.mediaStream = stream;
