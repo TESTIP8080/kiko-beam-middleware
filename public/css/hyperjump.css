@@ -1,0 +1,545 @@
+/* hyperjump.css - Star Wars Style Hyperjump Animation */
+
+/* Main animation container - fullscreen overlay */
+.hyperjump-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  display: none;
+  overflow: hidden;
+  background: #000;
+  perspective: 800px;
+  perspective-origin: center center;
+}
+
+/* Background star field - creates depth */
+.stars-background {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, white, transparent),
+    radial-gradient(2px 2px at 40px 70px, #aaa, transparent),
+    radial-gradient(1px 1px at 50px 20px, white, transparent),
+    radial-gradient(1px 1px at 80px 10px, #ccc, transparent),
+    radial-gradient(2px 2px at 90px 40px, white, transparent),
+    radial-gradient(1px 1px at 130px 80px, #bbb, transparent),
+    radial-gradient(2px 2px at 150px 100px, white, transparent);
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  opacity: 0.8;
+  transform: translateZ(-500px) scale(2);
+}
+
+/* Container for individual stars */
+.stars-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+/* Individual star styling */
+.hyperjump-star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 4px white;
+  transform-origin: center center;
+  transition: none;
+}
+
+/* Tunnel lines for hyperjump effect */
+.tunnel-lines {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tunnel-line {
+  position: absolute;
+  width: 2px;
+  height: 150%;
+  background: linear-gradient(to bottom,
+    transparent 0%,
+    rgba(100, 181, 246, 0.4) 20%,
+    rgba(3, 218, 198, 0.8) 50%,
+    rgba(100, 181, 246, 0.4) 80%,
+    transparent 100%);
+  transform-origin: center bottom;
+  opacity: 0;
+}
+
+/* White flash overlay */
+.white-flash {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ANIMATION PHASES */
+
+/* Phase 1: Stars pulse and brighten (1s) */
+.hyperjump-animation.phase-pulse .stars-background {
+  animation: background-pulse 1s ease-in-out;
+}
+
+.hyperjump-animation.phase-pulse .hyperjump-star {
+  animation: star-pulse 1s ease-in-out;
+}
+
+@keyframes background-pulse {
+  0% {
+    opacity: 0.3;
+    transform: translateZ(-500px) scale(2);
+  }
+  50% {
+    opacity: 1;
+    transform: translateZ(-400px) scale(2.1);
+  }
+  100% {
+    opacity: 0.9;
+    transform: translateZ(-300px) scale(2.2);
+  }
+}
+
+@keyframes star-pulse {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+    box-shadow: 0 0 4px white;
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+    box-shadow: 0 0 12px white, 0 0 24px rgba(255, 255, 255, 0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.2);
+    box-shadow: 0 0 8px white;
+  }
+}
+
+/* Phase 2: Acceleration - stars begin moving forward (1s) */
+.hyperjump-animation.phase-acceleration .stars-background {
+  animation: background-accelerate 1s ease-in forwards;
+}
+
+.hyperjump-animation.phase-acceleration .hyperjump-star {
+  animation: star-accelerate 1s ease-in forwards;
+}
+
+.hyperjump-animation.phase-acceleration .tunnel-lines {
+  animation: tunnel-fade-in 1s ease-in forwards;
+}
+
+@keyframes background-accelerate {
+  0% {
+    transform: translateZ(-300px) scale(2.2);
+  }
+  100% {
+    transform: translateZ(0) scale(3);
+  }
+}
+
+@keyframes star-accelerate {
+  0% {
+    transform: translateZ(0) scale(1.2);
+  }
+  100% {
+    transform: translateZ(500px) scale(2);
+  }
+}
+
+@keyframes tunnel-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+/* Phase 3: Full jump - stars stretch into lines (0.5s) */
+.hyperjump-animation.phase-jump .stars-background {
+  animation: background-stretch 0.5s ease-out forwards;
+}
+
+.hyperjump-animation.phase-jump .hyperjump-star {
+  animation: star-stretch 0.5s ease-out forwards;
+}
+
+.hyperjump-animation.phase-jump .tunnel-lines {
+  animation: tunnel-intensify 0.5s ease-out forwards;
+}
+
+.hyperjump-animation.phase-jump .tunnel-line {
+  animation: line-stretch 0.5s ease-out forwards;
+}
+
+@keyframes background-stretch {
+  0% {
+    transform: translateZ(0) scale(3);
+    filter: blur(0);
+  }
+  100% {
+    transform: translateZ(2000px) scale(10);
+    filter: blur(8px);
+    opacity: 0.2;
+  }
+}
+
+@keyframes star-stretch {
+  0% {
+    transform: translateZ(500px) scale(2) scaleY(1);
+    height: 2px;
+    opacity: 1;
+  }
+  100% {
+    transform: translateZ(3000px) scale(0.1) scaleY(100);
+    height: 200px;
+    opacity: 0.3;
+    filter: blur(2px);
+  }
+}
+
+@keyframes tunnel-intensify {
+  0% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes line-stretch {
+  0% {
+    opacity: 0;
+    transform: scaleY(0.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+/* Phase 4: White flash (0.3s) */
+.hyperjump-animation.phase-flash .white-flash {
+  animation: white-burst 0.3s ease-out forwards;
+}
+
+@keyframes white-burst {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Phase 5: Emerge from hyperspace (1s) */
+.hyperjump-animation.phase-emerge .white-flash {
+  animation: white-fade 1s ease-in forwards;
+}
+
+.hyperjump-animation.phase-emerge .stars-background {
+  animation: stars-emerge 1s ease-in forwards;
+}
+
+.hyperjump-animation.phase-emerge .tunnel-lines {
+  animation: tunnel-fade-out 1s ease-in forwards;
+}
+
+@keyframes white-fade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes stars-emerge {
+  0% {
+    transform: translateZ(2000px) scale(10);
+    filter: blur(8px);
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateZ(-100px) scale(1.5);
+    filter: blur(0);
+    opacity: 0.5;
+  }
+}
+
+@keyframes tunnel-fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Continuous travel phase */
+.hyperjump-animation.phase-traveling .stars-background {
+  animation: stars-travel 1s linear infinite;
+}
+
+.hyperjump-animation.phase-traveling .tunnel-lines {
+  opacity: 0.5;
+}
+
+@keyframes stars-travel {
+  0% {
+    background-position: 0 0;
+    transform: translateZ(0) scale(3);
+  }
+  100% {
+    background-position: 0 -200px;
+    transform: translateZ(200px) scale(3);
+  }
+}
+
+/* Complete/fade out animation */
+.hyperjump-animation.complete {
+  animation: complete-fade 1s ease-out forwards;
+}
+
+@keyframes complete-fade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Daily.co container styling during hyperjump */
+#daily-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  height: 90%;
+  max-width: 1200px;
+  max-height: 800px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 1s ease-in;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 0 80px rgba(3, 218, 198, 0.6);
+  border: 2px solid rgba(3, 218, 198, 0.3);
+}
+
+/* Teleport area enhancements during hyperjump */
+#teleport-area.hyperjump-active {
+  background: #000;
+}
+
+#teleport-area.hyperjump-active .contact-manager {
+  display: none !important;
+}
+
+/* Enhanced status indicator */
+#teleport-status {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10001;
+  padding: 15px 30px;
+  border-radius: 30px;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  font-weight: bold;
+  font-size: 1.3em;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  text-align: center;
+  min-width: 300px;
+}
+
+/* Status type animations */
+#teleport-status.status-info {
+  color: #64b5f6;
+  border-color: rgba(100, 181, 246, 0.5);
+  text-shadow: 0 0 20px rgba(100, 181, 246, 0.8);
+  animation: status-pulse 2s ease-in-out infinite;
+}
+
+#teleport-status.status-success {
+  color: #4caf50;
+  border-color: rgba(76, 175, 80, 0.5);
+  text-shadow: 0 0 30px rgba(76, 175, 80, 0.8);
+  box-shadow: 0 0 40px rgba(76, 175, 80, 0.4);
+}
+
+#teleport-status.status-error {
+  color: #f44336;
+  border-color: rgba(244, 67, 54, 0.5);
+  text-shadow: 0 0 20px rgba(244, 67, 54, 0.8);
+  animation: error-shake 0.5s ease-in-out;
+}
+
+@keyframes status-pulse {
+  0%, 100% {
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    transform: translateX(-50%) scale(1.05);
+  }
+}
+
+@keyframes error-shake {
+  0%, 100% {
+    transform: translateX(-50%);
+  }
+  25% {
+    transform: translateX(calc(-50% - 10px));
+  }
+  75% {
+    transform: translateX(calc(-50% + 10px));
+  }
+}
+
+/* Control buttons styling during call */
+#teleport-controls {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  z-index: 10001;
+}
+
+#end-call-btn, #mute-audio-btn, #mute-video-btn {
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  padding: 15px 30px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.1em;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  min-width: 120px;
+}
+
+#end-call-btn {
+  border-color: rgba(244, 67, 54, 0.5);
+  color: #f44336;
+}
+
+#end-call-btn:hover {
+  background: rgba(244, 67, 54, 0.3);
+  border-color: rgba(244, 67, 54, 0.8);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(244, 67, 54, 0.4);
+}
+
+#mute-audio-btn:hover, #mute-video-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(255, 255, 255, 0.2);
+}
+
+/* Special KiKo 2 demo enhancements */
+#teleport-area.kiko2-demo .hyperjump-star {
+  box-shadow: 0 0 6px #00ff88, 0 0 12px rgba(0, 255, 136, 0.5);
+}
+
+#teleport-area.kiko2-demo .tunnel-line {
+  background: linear-gradient(to bottom,
+    transparent 0%,
+    rgba(0, 255, 136, 0.4) 20%,
+    rgba(0, 255, 136, 0.8) 50%,
+    rgba(0, 255, 136, 0.4) 80%,
+    transparent 100%);
+}
+
+#teleport-area.kiko2-demo #teleport-status {
+  color: #00ff88;
+  border-color: rgba(0, 255, 136, 0.5);
+  text-shadow: 0 0 30px rgba(0, 255, 136, 0.8);
+}
+
+/* Performance optimizations */
+.hyperjump-star,
+.tunnel-line,
+.stars-background {
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  #daily-container {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    border-radius: 0;
+  }
+  
+  #teleport-status {
+    font-size: 1em;
+    padding: 12px 20px;
+    min-width: 200px;
+  }
+  
+  #teleport-controls {
+    bottom: 20px;
+    gap: 10px;
+  }
+  
+  #end-call-btn, #mute-audio-btn, #mute-video-btn {
+    padding: 12px 20px;
+    font-size: 0.9em;
+    min-width: 100px;
+  }
+  
+  .hyperjump-star {
+    width: 1px;
+    height: 1px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .hyperjump-animation,
+  .hyperjump-animation * {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  #daily-container {
+    opacity: 1 !important;
+  }
+}

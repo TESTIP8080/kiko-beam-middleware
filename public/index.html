@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <meta name="permissions-policy" content="microphone=(self), camera=(self)">
+  <meta http-equiv="Access-Control-Allow-Origin" content="*">
+  <meta http-equiv="Access-Control-Allow-Methods" content="GET, POST, OPTIONS">
+  <meta http-equiv="Access-Control-Allow-Headers" content="Content-Type, Authorization">
+
+  <title>KIKO MATRIX - Smart AI Assistant with Hyperjump</title>
+
+  <!-- External libraries -->
+  <script src="https://unpkg.com/simple-peer@9.11.1/simplepeer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <!-- Daily.co WebRTC -->
+  <script src="https://unpkg.com/@daily-co/daily-js"></script>
+
+  <!-- Styles - ПРАВИЛЬНОЕ МЕСТО -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/hyperjump.css">
+</head>
+
+<body>
+  <div class="header">
+    <h1>KIKO MATRIX</h1>
+    <div class="dialog-state" id="dialog-state">
+      <span id="dialog-state-text">Ready</span>
+    </div>
+    <div class="weather-widget" id="weather-widget">
+      <span id="weather-info">Loading weather...</span>
+    </div>
+  </div>
+  
+  <div class="app-container">
+    <!-- Chat Panel -->
+    <div class="chat-panel">
+      <div id="listening-indicator"></div>
+      <div id="volume-meter">
+        <div id="volume-level"></div>
+      </div>
+      <div class="recognition-status" id="recognition-status"></div>
+      <div id="chat-container"></div>
+      <div id="input-container">
+        <input type="text" id="user-input" placeholder="Say 'Call KiKo 2' or type a message..."/>
+        <button id="send-btn">Send</button>
+        <button id="voice-btn">🎤</button>
+      </div>
+    </div>
+
+    <!-- Media Panel -->
+    <div class="media-panel" id="media-panel">
+      <!-- Camera container -->
+      <div class="media-container" id="camera-container">
+        <h4>Camera</h4>
+        <div id="camera-area">
+          <video id="camera-preview" autoplay muted></video>
+          <button id="camera-btn">Take Photo</button>
+        </div>
+      </div>
+      
+      <!-- YouTube container -->
+      <div class="media-container" id="youtube-container">
+        <h4>YouTube</h4>
+        <div id="video-area">
+          <iframe id="youtube-iframe" allow="autoplay; encrypted-media"></iframe>
+          <div class="youtube-controls">
+            <button id="youtube-play">▶️ Play</button>
+            <button id="youtube-search">🔍 New Search</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Enhanced Hyperjump Teleport area -->
+  <div id="teleport-area">
+    <button id="close-teleport-btn">✕</button>
+    <div id="teleport-status">Initializing hyperjump systems...</div>
+    
+    <!-- Contact manager -->
+    <div class="contact-manager">
+      <h3>🚀 Hyperjump Contacts</h3>
+      <div class="contact-form">
+        <input type="text" id="contact-name" placeholder="Contact name for hyperjump">
+        <button id="add-simple-contact">Add Contact</button>
+      </div>
+      <div id="contact-list"></div>
+      
+      <!-- Quick demo button -->
+      <div class="demo-section">
+        <button id="kiko2-demo-btn" class="demo-button">
+          🤖 Demo Call to KiKo 2
+        </button>
+        <p class="demo-hint">Try: "Call KiKo 2" or "Hyperjump to KiKo 2"</p>
+      </div>
+    </div>
+    
+    <!-- Daily.co container will be created dynamically -->
+    
+    <!-- Teleport controls -->
+    <div id="teleport-controls">
+      <button id="end-call-btn">End Hyperjump</button>
+      <button id="mute-audio-btn">🎤 Mute</button>
+      <button id="mute-video-btn">📹 Video</button>
+    </div>
+  </div>
+  
+  <!-- QR code container -->
+  <div id="qr-container">
+    <h3>📱 Scan for Hyperjump Access</h3>
+    <div id="qrcode"></div>
+    <p id="qr-contact-name"></p>
+    <button id="close-qr-btn">Close</button>
+  </div>
+  
+  <!-- JavaScript modules - ВАЖНО: порядок загрузки! -->
+  <script src="js/config.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/speech.js"></script>
+  <script src="js/youtube.js"></script>
+  <script src="js/camera.js"></script>
+  <script src="js/gemini.js"></script>
+  <script src="js/teleport.js"></script>
+  <script src="js/commands.js"></script>
+  <script src="js/webrtc.js"></script>
+  <script src="js/contacts.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

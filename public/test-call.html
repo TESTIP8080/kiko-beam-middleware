@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KIKO MATRIX WebRTC Test</title>
+  <script src="https://unpkg.com/@daily-co/daily-js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1a1a1a;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    #container {
+      width: 80%;
+      height: 600px;
+      margin: 20px auto;
+      background: #000;
+      border: 2px solid #00ff88;
+      border-radius: 10px;
+      position: relative;
+    }
+    button {
+      background: #00ff88;
+      color: black;
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 10px;
+    }
+    button:hover {
+      background: #00cc66;
+    }
+    #status {
+      margin: 20px;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚀 KIKO MATRIX WebRTC Test</h1>
+  <div id="status">Ready to test</div>
+  
+  <button onclick="startCall()">Start Call to KiKo 2</button>
+  <button onclick="endCall()">End Call</button>
+  
+  <div id="container"></div>
+  
+  <script>
+    let callFrame = null;
+    const ROOM_URL = 'https://cloud-1ce00036af15462d911659c42a3afbd8.daily.co/kiko-matrix-demo';
+    
+    function updateStatus(msg) {
+      document.getElementById('status').textContent = msg;
+    }
+    
+    async function startCall() {
+      try {
+        updateStatus('Creating call frame...');
+        
+        callFrame = DailyIframe.createFrame(
+          document.getElementById('container'),
+          {
+            showLeaveButton: true,
+            showFullscreenButton: true,
+            iframeStyle: {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              border: 'none'
+            }
+          }
+        );
+        
+        updateStatus('Joining room...');
+        
+        await callFrame.join({
+          url: ROOM_URL,
+          userName: 'Test User'
+        });
+        
+        updateStatus('Connected! Room: kiko2-demo-room');
+        
+        // Event listeners
+        callFrame.on('participant-joined', (event) => {
+          console.log('Participant joined:', event.participant);
+          updateStatus(`${event.participant.user_name} joined the call`);
+        });
+        
+        callFrame.on('error', (error) => {
+          console.error('Error:', error);
+          updateStatus('Error: ' + error.errorMsg);
+        });
+        
+      } catch (error) {
+        console.error('Failed to start call:', error);
+        updateStatus('Failed to start call: ' + error.message);
+      }
+    }
+    
+    async function endCall() {
+      if (callFrame) {
+        try {
+          await callFrame.leave();
+          callFrame.destroy();
+          callFrame = null;
+          updateStatus('Call ended');
+        } catch (error) {
+          console.error('Error ending call:', error);
+          updateStatus('Error ending call');
+        }
+      }
+    }
+    
+    // Test Daily.co availability
+    window.addEventListener('load', () => {
+      if (window.DailyIframe) {
+        updateStatus('✅ Daily.co SDK loaded - Ready to test');
+      } else {
+        updateStatus('❌ Daily.co SDK not loaded');
+      }
+    });
+  </script>
+</body>
+</html> 

@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KiKo Beam - Hyperjump Incoming</title>
+  <style>
+    :root {
+      --bg-primary: #1e1e1e;
+      --text-primary: #ffffff;
+      --accent-color: #bb86fc;
+      --secondary-color: #03dac6;
+      --panel-bg: #2c2c2c;
+      --success-color: #4CAF50;
+      --error-color: #f44336;
+      --warning-color: #ff9800;
+      --border-radius: 10px;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Arial', sans-serif;
+      background: radial-gradient(ellipse at center, 
+        rgba(30, 30, 30, 0.95) 0%, 
+        rgba(0, 0, 0, 0.98) 60%, 
+        #000 100%);
+      color: var(--text-primary);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .header {
+      background-color: var(--panel-bg);
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      position: relative;
+      z-index: 10;
+      border-bottom: 2px solid rgba(3, 218, 198, 0.3);
+    }
+    
+    .header h1 {
+      margin: 0;
+      color: var(--accent-color);
+      font-size: 1.5rem;
+      text-shadow: 0 0 10px currentColor;
+    }
+    
+    .connection-quality {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+    
+    #daily-container {
+      flex: 1;
+      position: relative;
+      border: 2px solid rgba(3, 218, 198, 0.5);
+      box-shadow: 
+        0 0 20px rgba(3, 218, 198, 0.3),
+        inset 0 0 20px rgba(187, 134, 252, 0.1);
+      border-radius: var(--border-radius);
+      margin: 10px;
+      overflow: hidden;
+    }
+    
+    .controls-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, 
+        rgba(0,0,0,0.9) 0%, 
+        rgba(0,0,0,0.7) 50%, 
+        transparent 100%);
+      border-radius: 0 0 var(--border-radius) var(--border-radius);
+      z-index: 999;
+    }
+    
+    .status {
+      text-align: center;
+      padding: 15px;
+      color: var(--secondary-color);
+      font-weight: bold;
+      font-size: 1.1em;
+      text-shadow: 0 0 10px currentColor;
+    }
+    
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 15px 20px 25px;
+    }
+    
+    .control-btn {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.3);
+      background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
+      color: #000;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    
+    .control-btn:active {
+      transform: scale(0.95);
+    }
+    
+    .control-btn:hover {
+      box-shadow: 0 0 20px rgba(187, 134, 252, 0.6);
+    }
+    
+    #answer-btn {
+      background: linear-gradient(135deg, var(--success-color), #66bb6a);
+      animation: pulse-answer 2s infinite;
+    }
+    
+    #end-btn, #decline-btn {
+      background: linear-gradient(135deg, var(--error-color), #ef5350);
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .waiting-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at center, 
+        rgba(30, 30, 30, 0.95) 0%, 
+        rgba(0, 0, 0, 0.98) 60%, 
+        #000 100%);
+      z-index: 5;
+    }
+    
+    .hyperjump-indicator {
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, 
+        rgba(3, 218, 198, 0.8) 0%, 
+        rgba(3, 218, 198, 0.4) 30%, 
+        transparent 70%);
+      border-radius: 50%;
+      margin-bottom: 30px;
+      position: relative;
+      animation: hyperjump-pulse 2s infinite;
+      box-shadow: 
+        0 0 40px rgba(3, 218, 198, 0.6),
+        0 0 80px rgba(187, 134, 252, 0.4);
+    }
+    
+    .hyperjump-indicator::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle, 
+        rgba(187, 134, 252, 0.9) 0%, 
+        transparent 70%);
+      border-radius: 50%;
+      animation: hyperjump-core 1.5s infinite alternate;
+    }
+    
+    @keyframes pulse-answer {
+      0%, 100% {
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      }
+      50% {
+        box-shadow: 0 0 30px rgba(76, 175, 80, 0.8);
+      }
+    }
+    
+    @keyframes hyperjump-pulse {
+      0% {
+        transform: scale(0.9);
+        opacity: 0.7;
+      }
+      50% {
+        transform: scale(1.1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(0.9);
+        opacity: 0.7;
+      }
+    }
+    
+    @keyframes hyperjump-core {
+      0% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+      }
+    }
+    
+    /* Enhanced mobile hyperjump animation */
+    .mobile-hyperjump-animation {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3;
+      display: none;
+      overflow: hidden;
+      background: #000;
+    }
+    
+    .mobile-stars {
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      background-image: 
+        radial-gradient(2px 2px at 20px 30px, white, transparent),
+        radial-gradient(3px 3px at 40px 70px, var(--accent-color), transparent),
+        radial-gradient(1px 1px at 50px 20px, var(--secondary-color), transparent),
+        radial-gradient(2px 2px at 80px 10px, white, transparent);
+      background-size: 150px 150px;
+      animation: mobile-stars-move 15s linear infinite;
+    }
+    
+    .mobile-warp-tunnel {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at center, 
+        transparent 0%, 
+        rgba(187, 134, 252, 0.2) 40%, 
+        rgba(0,0,0,0.8) 80%);
+      animation: mobile-tunnel-spin 3s linear infinite;
+    }
+    
+    .mobile-energy-burst {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px;
+      height: 40px;
+      background: radial-gradient(circle, var(--secondary-color), transparent);
+      border-radius: 50%;
+      box-shadow: 0 0 30px var(--secondary-color);
+      animation: mobile-energy-pulse 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes mobile-stars-move {
+      0% { background-position: 0 0; }
+      100% { background-position: 150px 150px; }
+    }
+    
+    @keyframes mobile-tunnel-spin {
+      0% { transform: rotate(0deg) scale(1); }
+      100% { transform: rotate(360deg) scale(1.2); }
+    }
+    
+    @keyframes mobile-energy-pulse {
+      0% { width: 40px; height: 40px; opacity: 0.8; }
+      50% { width: 120px; height: 120px; opacity: 1; }
+      100% { width: 40px; height: 40px; opacity: 0.8; }
+    }
+    
+    /* Animation states */
+    .animation-connecting .mobile-hyperjump-animation {
+      display: block;
+    }
+    
+    .animation-connected .mobile-energy-burst {
+      animation: mobile-energy-success 1s ease-out;
+    }
+    
+    @keyframes mobile-energy-success {
+      0% { width: 40px; height: 40px; opacity: 1; }
+      50% { width: 200px; height: 200px; opacity: 0.9; }
+      100% { width: 300px; height: 300px; opacity: 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <h1>🚀 KiKo Beam Hyperjump</h1>
+    <div id="connection-quality" class="connection-quality"></div>
+  </div>
+  
+  <div id="daily-container"></div>
+  
+  <div class="controls-container">
+    <div id="status" class="status">Incoming hyperjump transmission...</div>
+    
+    <div id="incoming-controls" class="controls hidden">
+      <button id="answer-btn" class="control-btn" title="Accept Hyperjump">📞</button>
+      <button id="decline-btn" class="control-btn" title="Decline">❌</button>
+    </div>
+    
+    <div id="call-controls" class="controls hidden">
+      <button id="mute-btn" class="control-btn" title="Mute Audio">🎤</button>
+      <button id="video-btn" class="control-btn" title="Toggle Video">📹</button>
+      <button id="end-btn" class="control-btn" title="End Hyperjump">❌</button>
+    </div>
+  </div>
+  
+  <div id="waiting-screen" class="waiting-screen">
+    <div class="hyperjump-indicator"></div>
+    <h2>🌌 Incoming Hyperjump</h2>
+    <p>Establishing quantum connection...</p>
+  </div>
+  
+  <!-- Mobile hyperjump animation -->
+  <div class="mobile-hyperjump-animation">
+    <div class="mobile-stars"></div>
+    <div class="mobile-warp-tunnel"></div>
+    <div class="mobile-energy-burst"></div>
+  </div>
+
+  <!-- Load Daily.co -->
+  <script src="https://unpkg.com/@daily-co/daily-js"></script>
+  <script>
+    // Parse URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomId = urlParams.get('room');
+    let callFrame = null;
+    let connected = false;
+    let audioMuted = false;
+    let videoMuted = false;
+    
+    // Elements
+    const statusText = document.getElementById('status');
+    const incomingControls = document.getElementById('incoming-controls');
+    const callControls = document.getElementById('call-controls');
+    const answerBtn = document.getElementById('answer-btn');
+    const declineBtn = document.getElementById('decline-btn');
+    const muteBtn = document.getElementById('mute-btn');
+    const videoBtn = document.getElementById('video-btn');
+    const endBtn = document.getElementById('end-btn');
+    const waitingScreen = document.getElementById('waiting-screen');
+    const connectionQuality = document.getElementById('connection-quality');
+    const dailyContainer = document.getElementById('daily-container');
+    
+    // Enhanced sounds for mobile
+    let ringSound = null;
+    let connectSound = null;
+    let disconnectSound = null;
+    let hyperjumpSound = null;
+    
+    // Initialize sounds
+    function initSounds() {
+      try {
+        ringSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2514/2514-preview.mp3');
+        ringSound.loop = true;
+        ringSound.volume = 0.6;
+        
+        connectSound = new Audio('https://assets.mixkit.co/active_storage/sfx/209/209-preview.mp3');
+        connectSound.volume = 0.8;
+        
+        disconnectSound = new Audio('https://assets.mixkit.co/active_storage/sfx/560/560-preview.mp3');
+        disconnectSound.volume = 0.8;
+        
+        hyperjumpSound = new Audio('https://assets.mixkit.co/active_storage/sfx/1793/1793-preview.mp3');
+        hyperjumpSound.volume = 0.7;
+        
+        // Play incoming sound
+        playRingSound();
+      } catch (e) {
+        console.error('Error initializing sounds:', e);
+      }
+    }
+    
+    function playRingSound() {
+      if (ringSound) {
+        ringSound.currentTime = 0;
+        ringSound.play().catch(e => console.error('Error playing ring sound:', e));
+      }
+    }
+    
+    function stopRingSound() {
+      if (ringSound) {
+        ringSound.pause();
+        ringSound.currentTime = 0;
+      }
+    }
+    
+    function playConnectSound() {
+      stopRingSound();
+      
+      if (hyperjumpSound) {
+        hyperjumpSound.currentTime = 0;
+        hyperjumpSound.play().catch(console.error);
+        
+        setTimeout(() => {
+          if (connectSound) {
+            connectSound.currentTime = 0;
+            connectSound.play().catch(console.error);
+          }
+        }, 800);
+      }
+    }
+    
+    function playDisconnectSound() {
+      if (disconnectSound) {
+        disconnectSound.currentTime = 0;
+        disconnectSound.play().catch(console.error);
+      }
+    }
+    
+    // Hyperjump animation control
+    function startHyperjumpAnimation(state) {
+      const container = document.body;
+      
+      container.classList.remove('animation-connecting', 'animation-connected');
+      
+      if (state === 'connecting') {
+        container.classList.add('animation-connecting');
+      } else if (state === 'connected') {
+        container.classList.add('animation-connected');
+        playConnectSound();
+      }
+    }
+    
+    function stopHyperjumpAnimation() {
+      document.body.classList.remove('animation-connecting', 'animation-connected');
+    }
+    
+    // Initialize
+    function initialize() {
+      if (!roomId) {
+        statusText.textContent = 'Error: Missing hyperjump coordinates';
+        statusText.style.color = '#f44336';
+        return;
+      }
+      
+      console.log('🚀 Initializing hyperjump to room:', roomId);
+      
+      // Initialize sounds
+      initSounds();
+      
+      // Show incoming call UI
+      waitingScreen.classList.remove('hidden');
+      incomingControls.classList.remove('hidden');
+      statusText.textContent = 'Incoming hyperjump transmission...';
+      statusText.style.color = '#bb86fc';
+      
+      // Start connecting animation
+      startHyperjumpAnimation('connecting');
+      
+      // Set up button event handlers
+      answerBtn.addEventListener('click', answerCall);
+      declineBtn.addEventListener('click', endCall);
+      endBtn.addEventListener('click', endCall);
+      muteBtn.addEventListener('click', toggleMute);
+      videoBtn.addEventListener('click', toggleVideo);
+    }
+    
+    function answerCall() {
+      console.log('📞 Accepting hyperjump...');
+      
+      // Hide incoming call controls, show call controls
+      incomingControls.classList.add('hidden');
+      callControls.classList.remove('hidden');
+      waitingScreen.classList.add('hidden');
+      
+      statusText.textContent = 'Establishing hyperjump connection...';
+      statusText.style.color = '#03dac6';
+      
+      // Create Daily.co call frame
+      createDailyCallFrame();
+    }
+    
+    function createDailyCallFrame() {
+      try {
+        // Create room URL using the provided roomId
+        const roomUrl = `https://kiko-beam.daily.co/${roomId}`;
+        
+        console.log('🌌 Creating Daily.co frame for:', roomUrl);
+        
+        // Create Daily call frame
+        callFrame = DailyIframe.createFrame(dailyContainer, {
+          showLeaveButton: true,
+          showFullscreenButton: false,
+          showLocalVideo: true,
+          showParticipantsBar: false,
+          activeSpeakerMode: true,
+          style: {
+            width: '100%',
+            height: '100%',
+            border: 'none',
+            borderRadius: '10px'
+          }
+        });
+        
+        // Set up event listeners
+        callFrame
+          .on('joined-meeting', () => {
+            console.log('✅ Hyperjump successful!');
+            connected = true;
+            statusText.textContent = 'Hyperjump established';
+            statusText.style.color = '#4CAF50';
+            stopRingSound();
+            startHyperjumpAnimation('connected');
+            
+            // Hide animation after success
+            setTimeout(() => {
+              stopHyperjumpAnimation();
+            }, 2000);
+          })
+          .on('participant-joined', (event) => {
+            console.log('👤 Participant joined hyperjump:', event.participant.user_name);
+            playConnectSound();
+          })
+          .on('left-meeting', () => {
+            console.log('🚪 Left hyperjump');
+            connected = false;
+            endCall(false);
+          })
+          .on('error', (error) => {
+            console.error('❌ Daily.co error:', error);
+            statusText.textContent = 'Hyperjump error: ' + error.message;
+            statusText.style.color = '#f44336';
+            playDisconnectSound();
+          })
+          .on('participant-updated', (event) => {
+            const participant = event.participant;
+            if (participant.local) {
+              audioMuted = participant.audio === false;
+              videoMuted = participant.video === false;
+              
+              muteBtn.textContent = audioMuted ? '🔇' : '🎤';
+              muteBtn.style.background = audioMuted ? 
+                'linear-gradient(135deg, #ff9800, #ffb74d)' : 
+                'linear-gradient(135deg, #bb86fc, #03dac6)';
+                
+              videoBtn.textContent = videoMuted ? '📷' : '📹';
+              videoBtn.style.background = videoMuted ? 
+                'linear-gradient(135deg, #ff9800, #ffb74d)' : 
+                'linear-gradient(135deg, #bb86fc, #03dac6)';
+            }
+          });
+        
+        // Join the room
+        callFrame.join({
+          url: roomUrl,
+          userName: 'Mobile User'
+        });
+        
+      } catch (err) {
+        console.error('❌ Error creating Daily call frame:', err);
+        statusText.textContent = 'Failed to create hyperjump connection';
+        statusText.style.color = '#f44336';
+        playDisconnectSound();
+      }
+    }
+    
+    function endCall(destroyFrame = true) {
+      console.log('🛑 Ending hyperjump...');
+      
+      // Stop sounds
+      stopRingSound();
+      
+      // Stop animation
+      stopHyperjumpAnimation();
+      
+      // Destroy Daily frame if it exists and requested
+      if (callFrame && destroyFrame) {
+        callFrame.destroy();
+        callFrame = null;
+      }
+      
+      statusText.textContent = 'Hyperjump transmission ended';
+      statusText.style.color = '#9e9e9e';
+      connected = false;
+      
+      // Play disconnect sound
+      playDisconnectSound();
+      
+      // Close window after delay
+      setTimeout(() => {
+        window.close();
+      }, 3000);
+    }
+    
+    function toggleMute() {
+      if (callFrame) {
+        callFrame.setLocalAudio(!audioMuted);
+      }
+    }
+    
+    function toggleVideo() {
+      if (callFrame) {
+        callFrame.setLocalVideo(!videoMuted);
+      }
+    }
+    
+    // Start application
+    document.addEventListener('DOMContentLoaded', initialize);
+    
+    // Handle page visibility
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && connected) {
+        console.log('🔍 Page became visible, checking hyperjump connection...');
+      }
+    });
+  </script>
+</body>
+</html>

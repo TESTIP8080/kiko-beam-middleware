@@ -1,0 +1,75 @@
+{
+  "name": "kiko-matrix",
+  "version": "2.1.0",
+  "description": "KIKO MATRIX - Advanced AI Assistant with Daily.co Hyperjump Technology",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server . -p 8080 -c-1 --cors",
+    "dev": "npx live-server --port=8080 --host=0.0.0.0 --cors",
+    "serve": "python3 -m http.server 8080",
+    "serve-py": "python -m http.server 8080",
+    "build": "echo 'No build process needed - static files'",
+    "test": "echo 'Manual testing via browser'",
+    "deploy": "echo 'Copy files to web server'"
+  },
+  "keywords": [
+    "ai",
+    "assistant",
+    "webrtc",
+    "daily.co",
+    "hyperjump",
+    "video-calls",
+    "voice-control",
+    "multimedia",
+    "youtube",
+    "camera",
+    "weather",
+    "speech-recognition"
+  ],
+  "author": "KIKO MATRIX Development Team",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  },
+  "dependencies": {
+    "axios": "^1.9.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "multer": "^2.0.0",
+    "ws": "^8.18.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/kiko-matrix.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/kiko-matrix/issues"
+  },
+  "homepage": "https://your-username.github.io/kiko-matrix",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie <= 11"
+  ],
+  "config": {
+    "port": 8080,
+    "host": "0.0.0.0"
+  },
+  "files": [
+    "index.html",
+    "mobile-teleport.html",
+    "css/",
+    "js/",
+    "README.md"
+  ],
+  "directories": {
+    "css": "./css",
+    "js": "./js"
+  }
+}
