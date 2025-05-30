@@ -117,9 +117,15 @@ function updateRecognitionStatus(status) {
   }
   
   if (status === 'Listening...' && recognition && recognition._isRunning) {
-    if (window.voiceBtn) window.voiceBtn.textContent = '🎤 Active';
+    if (window.voiceBtn) {
+      window.voiceBtn.textContent = '🎤 Active';
+      window.voiceBtn.disabled = false;
+    }
   } else if (status === 'Microphone off') {
-    if (window.voiceBtn) window.voiceBtn.textContent = '🎤';
+    if (window.voiceBtn) {
+      window.voiceBtn.textContent = '🎤';
+      window.voiceBtn.disabled = true;
+    }
   }
 }
 

@@ -54,6 +54,13 @@ class KikoWebRTC {
       }
       clearSpeechQueue();
       
+      // Disable microphone
+      if (window.voiceBtn) {
+        window.voiceBtn.textContent = '🎤';
+        window.voiceBtn.disabled = true;
+      }
+      updateRecognitionStatus('Microphone off');
+      
       // Generate room URL
       this.roomName = roomId || `kiko-${Date.now()}`;
       this.roomUrl = `${this.baseUrl}/${this.roomName}`;
@@ -323,6 +330,13 @@ class KikoWebRTC {
         console.error("Error restarting speech recognition:", e);
       }
     }
+
+    // Enable microphone button
+    if (window.voiceBtn) {
+      window.voiceBtn.textContent = '🎤';
+      window.voiceBtn.disabled = false;
+    }
+    updateRecognitionStatus('Listening...');
   }
   
   toggleAudio() {
