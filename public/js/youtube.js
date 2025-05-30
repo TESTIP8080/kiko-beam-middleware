@@ -130,7 +130,11 @@ function playVideo(url) {
   youtubeContainer.style.display = 'flex';
   videoArea.classList.add('active');
   
-  const embedUrl = url.replace('watch?v=', 'embed/') + '?autoplay=1&enablejsapi=1';
+  // Updated URL with proper parameters for Vercel
+  const embedUrl = url.replace('watch?v=', 'embed/') + 
+    '?autoplay=1&enablejsapi=1&origin=https://kiko-beam-middleware.vercel.app' + 
+    '&rel=0&modestbranding=1&playsinline=1';
+    
   videoIframe.src = embedUrl;
   youtubePlayerState = 'playing';
   console.log("Loaded video:", embedUrl);
