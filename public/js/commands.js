@@ -124,7 +124,7 @@ function processDirectCommands(text) {
   }
   
   // Обработка команды звонка
-  if (text.toLowerCase().includes('call kiko 2') || text.toLowerCase().includes('kiko 2')) {
+  if (text.toLowerCase().includes('teleport kiko')) {
     console.log('🤖 Initiating KiKo 2 demo hyperjump...');
     
     // Use the WebRTC system for the call
@@ -147,8 +147,8 @@ function processHyperjumpCommands(text) {
   
   // Direct KiKo 2 calls
   const kiko2Patterns = [
-    'call kiko 2', 'kiko 2', 'hyperjump to kiko 2', 
-    'connect to kiko 2', 'demo call', 'test call'
+    'teleport kiko', 'kiko', 'hyperjump to kiko', 
+    'connect to kiko', 'demo call', 'test call'
   ];
   
   for (const pattern of kiko2Patterns) {
@@ -241,44 +241,51 @@ function processCameraCommands(text) {
 function processYouTubeControls(text) {
   const lower = text.toLowerCase();
   
-  if (lower === 'pause' || lower === 'pause video') {
+  // Команды паузы
+  if (lower.includes('pause') || lower.includes('stop video') || lower.includes('останови видео')) {
     if (stopYouTubeVideo()) {
-      addMessage('Video paused');
+      addMessage('Видео на паузе');
     } else {
-      addMessage('No video playing');
+      addMessage('Нет активного видео');
     }
     return true;
   }
   
-  if (lower === 'play' || lower === 'resume' || lower === 'continue') {
+  // Команды воспроизведения
+  if (lower.includes('play') || lower.includes('continue') || lower.includes('resume') || 
+      lower.includes('продолжи') || lower.includes('включи')) {
     if (youtubePlayerState === 'paused') {
       continueYouTubeVideo();
-      addMessage('Video resumed');
+      addMessage('Воспроизведение возобновлено');
     } else if (lastYouTubeUrl) {
       playVideo(lastYouTubeUrl);
-      addMessage(`Playing: "${lastYouTubeQuery}"`);
+      addMessage(`Воспроизводится: "${lastYouTubeQuery}"`);
     } else {
-      return false; // Let AI handle generic "play" command
+      return false; // Пусть AI обработает общую команду "play"
     }
     return true;
   }
   
-  if (lower === 'close youtube' || lower === 'stop youtube') {
+  // Команды закрытия
+  if (lower.includes('close youtube') || lower.includes('stop youtube') || 
+      lower.includes('закрой youtube') || lower.includes('выключи youtube')) {
     closeYouTube();
     return true;
   }
   
-  if (lower === 'next video' || lower === 'another video') {
+  // Команды следующего видео
+  if (lower.includes('next video') || lower.includes('another video') || 
+      lower.includes('следующее видео') || lower.includes('другое видео')) {
     if (lastYouTubeQuery) {
       searchYouTube(lastYouTubeQuery + ' different').then(url => {
         if (url && url !== lastYouTubeUrl) {
           lastYouTubeUrl = url;
           playVideo(url);
-          addMessage('Playing another video');
+          addMessage('Воспроизводится другое видео');
         }
       });
     } else {
-      addMessage('What kind of video would you like?');
+      addMessage('Какое видео вы хотите посмотреть?');
       currentDialogState = DialogState.WAITING_VIDEO_TOPIC;
     }
     return true;
