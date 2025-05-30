@@ -1,9 +1,7 @@
 // js/config.js - Configuration and API keys
 const config = {
-  GEMINI_API_KEY: (location.hostname === 'localhost' || location.hostname.includes('github.io'))
-      ? 'AIzaSyB0nsn5A_a6nAtGQsIZ-RZGrotGoCJaF8A' : '',
-  YOUTUBE_API_KEY: (location.hostname === 'localhost' || location.hostname.includes('github.io'))
-      ? 'AIzaSyDt1cRmHyYNEPnu78Wt4Y_RgXNhKwD2Q44' : '',
+  GEMINI_API_KEY: 'AIzaSyB0nsn5A_a6nAtGQsIZ-RZGrotGoCJaF8A',
+  YOUTUBE_API_KEY: 'AIzaSyDt1cRmHyYNEPnu78Wt4Y_RgXNhKwD2Q44',
   WEATHER_API_KEY: 'demo' // Using demo mode for weather
 };
 
