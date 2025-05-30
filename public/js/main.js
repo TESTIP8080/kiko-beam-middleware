@@ -669,8 +669,11 @@ function updateWeatherDisplay(weather) {
   currentWeather = weather;
   
   // Get the existing weather info element
-  const weatherInfo = document.getElementById('weather-info');
-  if (weatherInfo) {
+  if (!window.weatherInfo) {
+    window.weatherInfo = document.getElementById('weather-info');
+  }
+  
+  if (window.weatherInfo) {
     // Update time and weather
     updateTimeDisplay();
   } else {
@@ -784,9 +787,8 @@ async function updateTimeDisplay() {
       hour12: false 
     });
     
-    const weatherInfo = document.getElementById('weather-info');
-    if (weatherInfo && currentWeather) {
-      weatherInfo.innerHTML = `${time} | ${currentWeather.city}: ${currentWeather.temp}°C, ${currentWeather.description}`;
+    if (window.weatherInfo && currentWeather) {
+      window.weatherInfo.innerHTML = `${time} | ${currentWeather.city}: ${currentWeather.temp}°C, ${currentWeather.description}`;
     }
   } catch (error) {
     console.error('Error updating time display:', error);
