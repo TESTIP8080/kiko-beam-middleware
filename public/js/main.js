@@ -668,27 +668,14 @@ function updateWeatherDisplay(weather) {
   
   currentWeather = weather;
   
-  // Create weather info element if it doesn't exist
-  let weatherInfo = document.getElementById('weather-info');
-  if (!weatherInfo) {
-    weatherInfo = document.createElement('div');
-    weatherInfo.id = 'weather-info';
-    weatherInfo.style.cssText = `
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      background: rgba(0, 0, 0, 0.8);
-      color: white;
-      padding: 10px;
-      border-radius: 5px;
-      font-size: 14px;
-      z-index: 1000;
-    `;
-    document.body.appendChild(weatherInfo);
+  // Get the existing weather info element
+  const weatherInfo = document.getElementById('weather-info');
+  if (weatherInfo) {
+    // Update time and weather
+    updateTimeDisplay();
+  } else {
+    console.error('Weather info element not found');
   }
-  
-  // Update time and weather
-  updateTimeDisplay();
 }
 
 // Get weather with caching
@@ -805,6 +792,10 @@ async function updateTimeDisplay() {
     console.error('Error updating time display:', error);
   }
 }
+
+// Start time updates
+setInterval(updateTimeDisplay, 60000); // Update every minute
+updateTimeDisplay(); // Initial update
 
 // Initialize weather
 async function initWeather() {
