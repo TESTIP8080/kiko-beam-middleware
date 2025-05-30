@@ -566,46 +566,54 @@ class HyperjumpSound {
   }
   
   playJump() {
-    // Multiple oscillators for epic jump sound
+    // Star Wars hyperjump sound
     const osc1 = this.audioContext.createOscillator();
     const osc2 = this.audioContext.createOscillator();
     const osc3 = this.audioContext.createOscillator();
     const gain = this.audioContext.createGain();
     const filter = this.audioContext.createBiquadFilter();
     
-    osc1.type = 'sawtooth';
-    osc2.type = 'square';
-    osc3.type = 'triangle';
+    // Main oscillator - rising tone
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(200, this.audioContext.currentTime);
+    osc1.frequency.exponentialRampToValueAtTime(2000, this.audioContext.currentTime + 1.5);
     
-    osc1.frequency.setValueAtTime(1000, this.audioContext.currentTime);
-    osc1.frequency.exponentialRampToValueAtTime(50, this.audioContext.currentTime + 2);
+    // Whistle oscillator
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(1000, this.audioContext.currentTime);
+    osc2.frequency.exponentialRampToValueAtTime(3000, this.audioContext.currentTime + 1.5);
+    osc2.detune.setValueAtTime(10, this.audioContext.currentTime);
     
-    osc2.frequency.setValueAtTime(500, this.audioContext.currentTime);
-    osc2.frequency.exponentialRampToValueAtTime(25, this.audioContext.currentTime + 2);
+    // Bass oscillator for depth
+    osc3.type = 'sine';
+    osc3.frequency.setValueAtTime(100, this.audioContext.currentTime);
+    osc3.frequency.exponentialRampToValueAtTime(50, this.audioContext.currentTime + 1.5);
     
-    osc3.frequency.setValueAtTime(2000, this.audioContext.currentTime);
-    osc3.frequency.exponentialRampToValueAtTime(100, this.audioContext.currentTime + 2);
+    // Filter for the characteristic "whoosh"
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(1000, this.audioContext.currentTime);
+    filter.frequency.exponentialRampToValueAtTime(3000, this.audioContext.currentTime + 1.5);
+    filter.Q.setValueAtTime(10, this.audioContext.currentTime);
     
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(5000, this.audioContext.currentTime);
-    filter.frequency.exponentialRampToValueAtTime(200, this.audioContext.currentTime + 2);
-    filter.Q.setValueAtTime(5, this.audioContext.currentTime);
+    // Volume envelope
+    gain.gain.setValueAtTime(0, this.audioContext.currentTime);
+    gain.gain.linearRampToValueAtTime(this.baseVolume, this.audioContext.currentTime + 0.1);
+    gain.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 1.5);
     
-    gain.gain.setValueAtTime(this.baseVolume, this.audioContext.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 2);
-    
+    // Connect oscillators through filter
     osc1.connect(filter);
     osc2.connect(filter);
     osc3.connect(filter);
     filter.connect(gain);
     gain.connect(this.audioContext.destination);
     
+    // Start and stop timing
     osc1.start();
     osc2.start();
     osc3.start();
-    osc1.stop(this.audioContext.currentTime + 2);
-    osc2.stop(this.audioContext.currentTime + 2);
-    osc3.stop(this.audioContext.currentTime + 2);
+    osc1.stop(this.audioContext.currentTime + 1.5);
+    osc2.stop(this.audioContext.currentTime + 1.5);
+    osc3.stop(this.audioContext.currentTime + 1.5);
   }
   
   playConnected() {
