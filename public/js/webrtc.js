@@ -50,8 +50,10 @@ class KikoWebRTC {
       
       // Stop speech recognition and clear queue only for teleport kiko
       if (contactName === 'KiKo 2' && recognition && recognition._isRunning) {
+        recognition._manualStop = true; // Mark as manually stopped
         recognition.stop();
         clearSpeechQueue();
+        updateRecognitionStatus('Microphone off during call');
       }
       
       // Generate room URL
@@ -316,11 +318,15 @@ class KikoWebRTC {
     this.soundController.playDisconnect();
 
     // Restart speech recognition after call ends
-    if (recognition && !recognition._isRunning) {
-      try {
-        recognition.start();
-      } catch(e) {
-        console.error("Error restarting speech recognition:", e);
+    if (recognition) {
+      recognition._manualStop = false; // Reset manual stop flag
+      if (!recognition._isRunning) {
+        try {
+          recognition.start();
+          updateRecognitionStatus('Listening...');
+        } catch(e) {
+          console.error("Error restarting speech recognition:", e);
+        }
       }
     }
   }
