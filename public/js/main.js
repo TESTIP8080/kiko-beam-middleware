@@ -14,6 +14,9 @@ window.addEventListener('unhandledrejection', function(event) {
   event.preventDefault();
 });
 
+// Global state
+let isCallActive = false;
+
 // Event listeners
 document.addEventListener('DOMContentLoaded', function() {
   // Verify DOM elements are loaded
@@ -610,5 +613,35 @@ document.addEventListener('visibilitychange', () => {
     }
   }
 });
+
+// Enhanced voice input toggle
+function toggleVoiceInput() {
+  // Don't allow microphone activation during calls
+  if (isCallActive) {
+    addMessage('🎤 Microphone disabled during calls', false, false, true);
+    return;
+  }
+
+  if (!recognition) {
+    recognition = setupSpeechRecognition();
+  }
+
+  if (recognition) {
+    if (recognition._isRunning) {
+      recognition.stop();
+      updateRecognitionStatus('Microphone off');
+      if (window.voiceBtn) window.voiceBtn.textContent = '🎤';
+    } else {
+      try {
+        recognition.start();
+        updateRecognitionStatus('Listening...');
+        if (window.voiceBtn) window.voiceBtn.textContent = '🎤 Active';
+      } catch(e) {
+        console.error('Error starting recognition:', e);
+        addMessage('❌ Failed to start microphone', false, true);
+      }
+    }
+  }
+}
 
 console.log('🌌 KIKO MATRIX main systems loaded. Quantum initialization pending...');

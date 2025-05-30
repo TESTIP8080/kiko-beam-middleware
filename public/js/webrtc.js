@@ -35,6 +35,9 @@ class KikoWebRTC {
     }
     
     try {
+      // Set call active flag
+      window.isCallActive = true;
+      
       // IMMEDIATELY show teleport area and start animation
       const teleportArea = document.getElementById('teleport-area');
       if (teleportArea) {
@@ -269,6 +272,9 @@ class KikoWebRTC {
   
   async endCall() {
     console.log('🛑 Ending hyperjump...');
+    
+    // Reset call active flag
+    window.isCallActive = false;
     
     // Stop sounds
     this.soundController.stopAll();
