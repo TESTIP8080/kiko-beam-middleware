@@ -566,47 +566,47 @@ class HyperjumpSound {
   }
   
   playJump() {
-    // Star Wars hyperjump sound with engine hum and pull effect
-    const osc1 = this.audioContext.createOscillator(); // Main engine hum
-    const osc2 = this.audioContext.createOscillator(); // Pull effect
-    const osc3 = this.audioContext.createOscillator(); // Low rumble
+    // Star Wars hyperjump sound with deep engine hum and lightning effect
+    const osc1 = this.audioContext.createOscillator(); // Deep engine hum
+    const osc2 = this.audioContext.createOscillator(); // Lightning effect
+    const osc3 = this.audioContext.createOscillator(); // Sub-bass rumble
     const gain = this.audioContext.createGain();
     const filter1 = this.audioContext.createBiquadFilter(); // Engine filter
-    const filter2 = this.audioContext.createBiquadFilter(); // Pull effect filter
+    const filter2 = this.audioContext.createBiquadFilter(); // Lightning filter
     
-    // Main engine hum - starts low and rises
-    osc1.type = 'sawtooth';
-    osc1.frequency.setValueAtTime(100, this.audioContext.currentTime);
-    osc1.frequency.exponentialRampToValueAtTime(400, this.audioContext.currentTime + 2);
+    // Deep engine hum - very low frequency
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(40, this.audioContext.currentTime);
+    osc1.frequency.exponentialRampToValueAtTime(80, this.audioContext.currentTime + 1.5);
     
-    // Pull effect - creates the "stretching" sound
-    osc2.type = 'sine';
-    osc2.frequency.setValueAtTime(300, this.audioContext.currentTime);
-    osc2.frequency.exponentialRampToValueAtTime(1200, this.audioContext.currentTime + 2);
-    osc2.detune.setValueAtTime(20, this.audioContext.currentTime);
+    // Lightning effect - sharp rising tone
+    osc2.type = 'sawtooth';
+    osc2.frequency.setValueAtTime(200, this.audioContext.currentTime);
+    osc2.frequency.exponentialRampToValueAtTime(2000, this.audioContext.currentTime + 0.5);
+    osc2.detune.setValueAtTime(50, this.audioContext.currentTime);
     
-    // Low rumble for depth
+    // Sub-bass rumble for power
     osc3.type = 'sine';
-    osc3.frequency.setValueAtTime(50, this.audioContext.currentTime);
-    osc3.frequency.exponentialRampToValueAtTime(25, this.audioContext.currentTime + 2);
+    osc3.frequency.setValueAtTime(30, this.audioContext.currentTime);
+    osc3.frequency.exponentialRampToValueAtTime(20, this.audioContext.currentTime + 1.5);
     
-    // Engine filter - creates the characteristic hum
+    // Engine filter - deep rumble
     filter1.type = 'lowpass';
-    filter1.frequency.setValueAtTime(200, this.audioContext.currentTime);
-    filter1.frequency.exponentialRampToValueAtTime(800, this.audioContext.currentTime + 2);
-    filter1.Q.setValueAtTime(2, this.audioContext.currentTime);
+    filter1.frequency.setValueAtTime(100, this.audioContext.currentTime);
+    filter1.frequency.exponentialRampToValueAtTime(200, this.audioContext.currentTime + 1.5);
+    filter1.Q.setValueAtTime(1, this.audioContext.currentTime);
     
-    // Pull effect filter - creates the stretching sound
-    filter2.type = 'bandpass';
-    filter2.frequency.setValueAtTime(400, this.audioContext.currentTime);
-    filter2.frequency.exponentialRampToValueAtTime(1600, this.audioContext.currentTime + 2);
-    filter2.Q.setValueAtTime(8, this.audioContext.currentTime);
+    // Lightning filter - sharp effect
+    filter2.type = 'highpass';
+    filter2.frequency.setValueAtTime(500, this.audioContext.currentTime);
+    filter2.frequency.exponentialRampToValueAtTime(2000, this.audioContext.currentTime + 0.5);
+    filter2.Q.setValueAtTime(12, this.audioContext.currentTime);
     
-    // Volume envelope - starts quiet, builds up, then fades
+    // Volume envelope - starts with engine, then lightning
     gain.gain.setValueAtTime(0, this.audioContext.currentTime);
-    gain.gain.linearRampToValueAtTime(this.baseVolume * 0.8, this.audioContext.currentTime + 0.3);
-    gain.gain.setValueAtTime(this.baseVolume * 0.8, this.audioContext.currentTime + 1.5);
-    gain.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 2);
+    gain.gain.linearRampToValueAtTime(this.baseVolume * 0.9, this.audioContext.currentTime + 0.2);
+    gain.gain.setValueAtTime(this.baseVolume * 0.9, this.audioContext.currentTime + 1);
+    gain.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 1.5);
     
     // Connect oscillators through filters
     osc1.connect(filter1);
@@ -621,9 +621,9 @@ class HyperjumpSound {
     osc1.start();
     osc2.start();
     osc3.start();
-    osc1.stop(this.audioContext.currentTime + 2);
-    osc2.stop(this.audioContext.currentTime + 2);
-    osc3.stop(this.audioContext.currentTime + 2);
+    osc1.stop(this.audioContext.currentTime + 1.5);
+    osc2.stop(this.audioContext.currentTime + 0.5);
+    osc3.stop(this.audioContext.currentTime + 1.5);
   }
   
   playConnected() {
