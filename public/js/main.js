@@ -676,6 +676,7 @@ function updateWeatherDisplay(weather) {
 async function getWeather() {
   // Check cache first
   if (weatherCache.data && (Date.now() - weatherCache.timestamp < weatherCache.expiry)) {
+    updateWeatherDisplay(weatherCache.data);
     return weatherCache.data;
   }
   
@@ -695,6 +696,7 @@ async function getWeather() {
     console.error('Error fetching weather:', error);
     // Return cached data if available, even if expired
     if (weatherCache.data) {
+      updateWeatherDisplay(weatherCache.data);
       return weatherCache.data;
     }
     return null;
@@ -709,7 +711,7 @@ function updateTime() {
     hour12: false 
   });
   
-  if (currentWeather) {
+  if (weatherInfo && currentWeather) {
     weatherInfo.innerHTML = `${time} | ${currentWeather.city}: ${currentWeather.temp}°C, ${currentWeather.description}`;
   }
 }
@@ -717,6 +719,16 @@ function updateTime() {
 // Start time updates
 setInterval(updateTime, 60000);
 updateTime(); // Initial update
+
+// Initialize weather
+async function initWeather() {
+  try {
+    await getWeather();
+    console.log('🌤️ Weather systems online');
+  } catch (error) {
+    console.error('Weather initialization error:', error);
+  }
+}
 
 console.log('🌌 KIKO MATRIX main systems loaded. Quantum initialization pending...');
 

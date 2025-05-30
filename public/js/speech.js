@@ -462,26 +462,66 @@ function cleanupAudioResources() {
   microphone = null;
 }
 
+// Handle speech error
+function handleSpeechError(error) {
+  console.error('Speech recognition error:', error);
+  
+  // Don't restart if manually stopped or during speaking
+  if (recognition._manualStop || isSpeaking) {
+    return;
+  }
+  
+  // Add delay before restarting
+  setTimeout(() => {
+    if (recognition && !recognition._isRunning && !recognition._manualStop) {
+      try {
+        recognition.start();
+        updateRecognitionStatus('Listening...');
+      } catch(e) {
+        console.error('Error restarting after speech error:', e);
+        // Show restart button if error persists
+        const restartBtn = document.getElementById('restart-mic-btn');
+        if (restartBtn) {
+          restartBtn.style.display = 'block';
+        }
+      }
+    }
+  }, 1000);
+}
+
+// Update voice button state
+function updateVoiceButtonState() {
+  if (!window.voiceBtn) return;
+  
+  if (recognition && recognition._isRunning) {
+    window.voiceBtn.textContent = '🎤 Active';
+    window.voiceBtn.style.background = 'rgba(0, 255, 0, 0.2)';
+  } else {
+    window.voiceBtn.textContent = '🎤';
+    window.voiceBtn.style.background = '';
+  }
+}
+
 // Toggle voice input
 function toggleVoiceInput() {
   if (!recognition) {
     recognition = setupSpeechRecognition();
-    if (!recognition) return;
   }
-  
-  if (recognition._isRunning) {
-    recognition._manualStop = true;
-    recognition.stop();
-    addMessage('🎤 Microphone turned off', false, false, true);
-  } else {
-    try {
-      activateSpeechSynthesis();
-      
-      recognition._manualStop = false;
-      recognition.start();
-    } catch(e) {
-      console.error("Error starting microphone:", e);
-      addMessage('❌ Failed to enable microphone', false, true);
+
+  if (recognition) {
+    if (recognition._isRunning) {
+      recognition.stop();
+      updateRecognitionStatus('Microphone off');
+      updateVoiceButtonState();
+    } else {
+      try {
+        recognition.start();
+        updateRecognitionStatus('Listening...');
+        updateVoiceButtonState();
+      } catch(e) {
+        console.error('Error starting recognition:', e);
+        addMessage('❌ Failed to start microphone', false, true);
+      }
     }
   }
 }
