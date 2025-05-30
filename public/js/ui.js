@@ -97,7 +97,7 @@ function showThinking() {
   hideThinking();
   thinkingMessageDiv = document.createElement('div');
   thinkingMessageDiv.classList.add('message', 'thinking-message');
-  thinkingMessageDiv.textContent = 'Думаю...';
+  thinkingMessageDiv.textContent = 'Thinking...';
   chatContainer.appendChild(thinkingMessageDiv);
   chatContainer.scrollTop = chatContainer.scrollHeight;
 }
