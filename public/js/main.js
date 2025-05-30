@@ -669,10 +669,10 @@ function updateWeatherDisplay(weather) {
   currentWeather = weather;
   
   // Create weather info element if it doesn't exist
-  if (!weatherInfo) {
-    weatherInfo = document.createElement('div');
-    weatherInfo.id = 'weather-info';
-    weatherInfo.style.cssText = `
+  if (!window.weatherInfo) {
+    window.weatherInfo = document.createElement('div');
+    window.weatherInfo.id = 'weather-info';
+    window.weatherInfo.style.cssText = `
       position: fixed;
       top: 10px;
       right: 10px;
@@ -683,7 +683,7 @@ function updateWeatherDisplay(weather) {
       font-size: 14px;
       z-index: 1000;
     `;
-    document.body.appendChild(weatherInfo);
+    document.body.appendChild(window.weatherInfo);
   }
   
   // Update time and weather
@@ -767,24 +767,21 @@ async function getTime() {
   }
   
   try {
-    const response = await fetch(`${API_ENDPOINTS.TIME}/${CONFIG.DEFAULT_TIMEZONE}`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    timeCache.data = data;
+    // Use local time instead of API
+    const now = new Date();
+    timeCache.data = {
+      datetime: now.toISOString(),
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    };
     timeCache.timestamp = Date.now();
-    return data;
+    return timeCache.data;
   } catch (error) {
-    console.error('Error fetching time:', error);
-    // Return cached data if available
-    if (timeCache.data) {
-      return timeCache.data;
-    }
+    console.error('Error getting time:', error);
     // Fallback to local time
+    const now = new Date();
     return {
-      datetime: new Date().toISOString(),
-      timezone: CONFIG.DEFAULT_TIMEZONE
+      datetime: now.toISOString(),
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
     };
   }
 }
@@ -799,8 +796,8 @@ async function updateTimeDisplay() {
       hour12: false 
     });
     
-    if (weatherInfo && currentWeather) {
-      weatherInfo.innerHTML = `${time} | ${currentWeather.city}: ${currentWeather.temp}°C, ${currentWeather.description}`;
+    if (window.weatherInfo && currentWeather) {
+      window.weatherInfo.innerHTML = `${time} | ${currentWeather.city}: ${currentWeather.temp}°C, ${currentWeather.description}`;
     }
   } catch (error) {
     console.error('Error updating time display:', error);
