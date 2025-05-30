@@ -669,10 +669,11 @@ function updateWeatherDisplay(weather) {
   currentWeather = weather;
   
   // Create weather info element if it doesn't exist
-  if (!window.weatherInfo) {
-    window.weatherInfo = document.createElement('div');
-    window.weatherInfo.id = 'weather-info';
-    window.weatherInfo.style.cssText = `
+  let weatherInfo = document.getElementById('weather-info');
+  if (!weatherInfo) {
+    weatherInfo = document.createElement('div');
+    weatherInfo.id = 'weather-info';
+    weatherInfo.style.cssText = `
       position: fixed;
       top: 10px;
       right: 10px;
@@ -683,7 +684,7 @@ function updateWeatherDisplay(weather) {
       font-size: 14px;
       z-index: 1000;
     `;
-    document.body.appendChild(window.weatherInfo);
+    document.body.appendChild(weatherInfo);
   }
   
   // Update time and weather
@@ -796,23 +797,24 @@ async function updateTimeDisplay() {
       hour12: false 
     });
     
-    if (window.weatherInfo && currentWeather) {
-      window.weatherInfo.innerHTML = `${time} | ${currentWeather.city}: ${currentWeather.temp}°C, ${currentWeather.description}`;
+    const weatherInfo = document.getElementById('weather-info');
+    if (weatherInfo && currentWeather) {
+      weatherInfo.innerHTML = `${time} | ${currentWeather.city}: ${currentWeather.temp}°C, ${currentWeather.description}`;
     }
   } catch (error) {
     console.error('Error updating time display:', error);
   }
 }
 
-// Start time updates
-setInterval(updateTimeDisplay, 60000); // Update every minute
-updateTimeDisplay(); // Initial update
-
 // Initialize weather
 async function initWeather() {
   try {
-    await getWeather();
-    console.log('🌤️ Weather systems online');
+    const weather = await getWeather();
+    if (weather) {
+      console.log('🌤️ Weather systems online');
+    } else {
+      console.warn('⚠️ Weather data not available');
+    }
   } catch (error) {
     console.error('Weather initialization error:', error);
   }
