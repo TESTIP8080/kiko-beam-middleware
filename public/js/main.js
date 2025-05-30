@@ -699,18 +699,47 @@ async function getWeather() {
   }
   
   try {
-    const response = await fetch(`${API_ENDPOINTS.WEATHER}?q=${CONFIG.DEFAULT_CITY}&units=metric&appid=${CONFIG.OPENWEATHER_API_KEY}`);
+    const response = await fetch(`${API_ENDPOINTS.WEATHER}?latitude=${CONFIG.DEFAULT_LAT}&longitude=${CONFIG.DEFAULT_LON}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&timezone=auto`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
+    
+    // Convert weather code to description
+    const weatherCodes = {
+      0: 'Clear sky',
+      1: 'Mainly clear',
+      2: 'Partly cloudy',
+      3: 'Overcast',
+      45: 'Foggy',
+      48: 'Depositing rime fog',
+      51: 'Light drizzle',
+      53: 'Moderate drizzle',
+      55: 'Dense drizzle',
+      61: 'Slight rain',
+      63: 'Moderate rain',
+      65: 'Heavy rain',
+      71: 'Slight snow',
+      73: 'Moderate snow',
+      75: 'Heavy snow',
+      77: 'Snow grains',
+      80: 'Slight rain showers',
+      81: 'Moderate rain showers',
+      82: 'Violent rain showers',
+      85: 'Slight snow showers',
+      86: 'Heavy snow showers',
+      95: 'Thunderstorm',
+      96: 'Thunderstorm with slight hail',
+      99: 'Thunderstorm with heavy hail'
+    };
+
     const weather = {
-      city: data.name,
-      temp: Math.round(data.main.temp),
-      description: data.weather[0].description,
-      humidity: data.main.humidity,
-      windSpeed: data.wind.speed,
-      icon: data.weather[0].icon
+      city: CONFIG.DEFAULT_CITY,
+      temp: Math.round(data.current.temperature_2m),
+      description: weatherCodes[data.current.weather_code] || 'Unknown',
+      humidity: data.current.relative_humidity_2m,
+      windSpeed: Math.round(data.current.wind_speed_10m),
+      icon: data.current.weather_code
     };
     
     if (weather && weather.city) {

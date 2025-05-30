@@ -2,10 +2,9 @@
 const config = {
   GEMINI_API_KEY: 'AIzaSyB0nsn5A_a6nAtGQsIZ-RZGrotGoCJaF8A',
   YOUTUBE_API_KEY: 'AIzaSyDt1cRmHyYNEPnu78Wt4Y_RgXNhKwD2Q44',
-  WEATHER_API_KEY: 'demo', // Using demo mode for weather
-  OPENWEATHER_API_KEY: 'YOUR_OPENWEATHER_API_KEY', // Get free key from openweathermap.org
-  DAILY_API_KEY: 'YOUR_DAILY_API_KEY', // Замените на ваш Daily.co API ключ
   DEFAULT_CITY: 'Moscow',
+  DEFAULT_LAT: 55.7558, // Moscow coordinates
+  DEFAULT_LON: 37.6173,
   DEFAULT_TIMEZONE: 'Europe/Moscow'
 };
 
@@ -111,7 +110,7 @@ const isAndroidTV = navigator.userAgent.toLowerCase().includes('android tv') ||
 
 // API endpoints
 const API_ENDPOINTS = {
-  WEATHER: 'https://api.openweathermap.org/data/2.5/weather',
+  WEATHER: 'https://api.open-meteo.com/v1/forecast',
   TIME: 'https://worldtimeapi.org/api/timezone'
 };
 
