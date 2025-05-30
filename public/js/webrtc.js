@@ -566,54 +566,64 @@ class HyperjumpSound {
   }
   
   playJump() {
-    // Star Wars hyperjump sound
-    const osc1 = this.audioContext.createOscillator();
-    const osc2 = this.audioContext.createOscillator();
-    const osc3 = this.audioContext.createOscillator();
+    // Star Wars hyperjump sound with engine hum and pull effect
+    const osc1 = this.audioContext.createOscillator(); // Main engine hum
+    const osc2 = this.audioContext.createOscillator(); // Pull effect
+    const osc3 = this.audioContext.createOscillator(); // Low rumble
     const gain = this.audioContext.createGain();
-    const filter = this.audioContext.createBiquadFilter();
+    const filter1 = this.audioContext.createBiquadFilter(); // Engine filter
+    const filter2 = this.audioContext.createBiquadFilter(); // Pull effect filter
     
-    // Main oscillator - rising tone
-    osc1.type = 'sine';
-    osc1.frequency.setValueAtTime(200, this.audioContext.currentTime);
-    osc1.frequency.exponentialRampToValueAtTime(2000, this.audioContext.currentTime + 1.5);
+    // Main engine hum - starts low and rises
+    osc1.type = 'sawtooth';
+    osc1.frequency.setValueAtTime(100, this.audioContext.currentTime);
+    osc1.frequency.exponentialRampToValueAtTime(400, this.audioContext.currentTime + 2);
     
-    // Whistle oscillator
+    // Pull effect - creates the "stretching" sound
     osc2.type = 'sine';
-    osc2.frequency.setValueAtTime(1000, this.audioContext.currentTime);
-    osc2.frequency.exponentialRampToValueAtTime(3000, this.audioContext.currentTime + 1.5);
-    osc2.detune.setValueAtTime(10, this.audioContext.currentTime);
+    osc2.frequency.setValueAtTime(300, this.audioContext.currentTime);
+    osc2.frequency.exponentialRampToValueAtTime(1200, this.audioContext.currentTime + 2);
+    osc2.detune.setValueAtTime(20, this.audioContext.currentTime);
     
-    // Bass oscillator for depth
+    // Low rumble for depth
     osc3.type = 'sine';
-    osc3.frequency.setValueAtTime(100, this.audioContext.currentTime);
-    osc3.frequency.exponentialRampToValueAtTime(50, this.audioContext.currentTime + 1.5);
+    osc3.frequency.setValueAtTime(50, this.audioContext.currentTime);
+    osc3.frequency.exponentialRampToValueAtTime(25, this.audioContext.currentTime + 2);
     
-    // Filter for the characteristic "whoosh"
-    filter.type = 'bandpass';
-    filter.frequency.setValueAtTime(1000, this.audioContext.currentTime);
-    filter.frequency.exponentialRampToValueAtTime(3000, this.audioContext.currentTime + 1.5);
-    filter.Q.setValueAtTime(10, this.audioContext.currentTime);
+    // Engine filter - creates the characteristic hum
+    filter1.type = 'lowpass';
+    filter1.frequency.setValueAtTime(200, this.audioContext.currentTime);
+    filter1.frequency.exponentialRampToValueAtTime(800, this.audioContext.currentTime + 2);
+    filter1.Q.setValueAtTime(2, this.audioContext.currentTime);
     
-    // Volume envelope
+    // Pull effect filter - creates the stretching sound
+    filter2.type = 'bandpass';
+    filter2.frequency.setValueAtTime(400, this.audioContext.currentTime);
+    filter2.frequency.exponentialRampToValueAtTime(1600, this.audioContext.currentTime + 2);
+    filter2.Q.setValueAtTime(8, this.audioContext.currentTime);
+    
+    // Volume envelope - starts quiet, builds up, then fades
     gain.gain.setValueAtTime(0, this.audioContext.currentTime);
-    gain.gain.linearRampToValueAtTime(this.baseVolume, this.audioContext.currentTime + 0.1);
-    gain.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 1.5);
+    gain.gain.linearRampToValueAtTime(this.baseVolume * 0.8, this.audioContext.currentTime + 0.3);
+    gain.gain.setValueAtTime(this.baseVolume * 0.8, this.audioContext.currentTime + 1.5);
+    gain.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 2);
     
-    // Connect oscillators through filter
-    osc1.connect(filter);
-    osc2.connect(filter);
-    osc3.connect(filter);
-    filter.connect(gain);
+    // Connect oscillators through filters
+    osc1.connect(filter1);
+    osc2.connect(filter2);
+    osc3.connect(filter1);
+    
+    filter1.connect(gain);
+    filter2.connect(gain);
     gain.connect(this.audioContext.destination);
     
     // Start and stop timing
     osc1.start();
     osc2.start();
     osc3.start();
-    osc1.stop(this.audioContext.currentTime + 1.5);
-    osc2.stop(this.audioContext.currentTime + 1.5);
-    osc3.stop(this.audioContext.currentTime + 1.5);
+    osc1.stop(this.audioContext.currentTime + 2);
+    osc2.stop(this.audioContext.currentTime + 2);
+    osc3.stop(this.audioContext.currentTime + 2);
   }
   
   playConnected() {
