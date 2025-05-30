@@ -24,6 +24,13 @@ let weatherCache = {
   expiry: 5 * 60 * 1000 // 5 minutes
 };
 
+// Time cache
+let timeCache = {
+  data: null,
+  timestamp: 0,
+  expiry: 60 * 1000 // 1 minute
+};
+
 // Event listeners
 document.addEventListener('DOMContentLoaded', function() {
   // Verify DOM elements are loaded
@@ -660,16 +667,27 @@ function updateWeatherDisplay(weather) {
   weatherCache.timestamp = Date.now();
   
   currentWeather = weather;
-  const time = new Date().toLocaleTimeString('ru-RU', { 
-    hour: '2-digit', 
-    minute: '2-digit',
-    hour12: false 
-  });
   
-  if (weatherInfo) {
-    weatherInfo.innerHTML = `${time} | ${weather.city}: ${weather.temp}°C, ${weather.description}`;
-    weatherWidget.classList.add('active');
+  // Create weather info element if it doesn't exist
+  if (!weatherInfo) {
+    weatherInfo = document.createElement('div');
+    weatherInfo.id = 'weather-info';
+    weatherInfo.style.cssText = `
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 14px;
+      z-index: 1000;
+    `;
+    document.body.appendChild(weatherInfo);
   }
+  
+  // Update time and weather
+  updateTimeDisplay();
 }
 
 // Get weather with caching
@@ -681,11 +699,20 @@ async function getWeather() {
   }
   
   try {
-    const response = await fetch('/api/weather');
+    const response = await fetch(`${API_ENDPOINTS.WEATHER}?q=${CONFIG.DEFAULT_CITY}&units=metric&appid=${CONFIG.OPENWEATHER_API_KEY}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const weather = await response.json();
+    const data = await response.json();
+    const weather = {
+      city: data.name,
+      temp: Math.round(data.main.temp),
+      description: data.weather[0].description,
+      humidity: data.main.humidity,
+      windSpeed: data.wind.speed,
+      icon: data.weather[0].icon
+    };
+    
     if (weather && weather.city) {
       updateWeatherDisplay(weather);
       return weather;
@@ -703,22 +730,57 @@ async function getWeather() {
   }
 }
 
-// Update time every minute
-function updateTime() {
-  const time = new Date().toLocaleTimeString('ru-RU', { 
-    hour: '2-digit', 
-    minute: '2-digit',
-    hour12: false 
-  });
+// Get time with caching
+async function getTime() {
+  // Check cache first
+  if (timeCache.data && (Date.now() - timeCache.timestamp < timeCache.expiry)) {
+    return timeCache.data;
+  }
   
-  if (weatherInfo && currentWeather) {
-    weatherInfo.innerHTML = `${time} | ${currentWeather.city}: ${currentWeather.temp}°C, ${currentWeather.description}`;
+  try {
+    const response = await fetch(`${API_ENDPOINTS.TIME}/${CONFIG.DEFAULT_TIMEZONE}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    timeCache.data = data;
+    timeCache.timestamp = Date.now();
+    return data;
+  } catch (error) {
+    console.error('Error fetching time:', error);
+    // Return cached data if available
+    if (timeCache.data) {
+      return timeCache.data;
+    }
+    // Fallback to local time
+    return {
+      datetime: new Date().toISOString(),
+      timezone: CONFIG.DEFAULT_TIMEZONE
+    };
+  }
+}
+
+// Update time display
+async function updateTimeDisplay() {
+  try {
+    const timeData = await getTime();
+    const time = new Date(timeData.datetime).toLocaleTimeString('ru-RU', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: false 
+    });
+    
+    if (weatherInfo && currentWeather) {
+      weatherInfo.innerHTML = `${time} | ${currentWeather.city}: ${currentWeather.temp}°C, ${currentWeather.description}`;
+    }
+  } catch (error) {
+    console.error('Error updating time display:', error);
   }
 }
 
 // Start time updates
-setInterval(updateTime, 60000);
-updateTime(); // Initial update
+setInterval(updateTimeDisplay, 60000); // Update every minute
+updateTimeDisplay(); // Initial update
 
 // Initialize weather
 async function initWeather() {
