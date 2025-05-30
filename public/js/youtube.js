@@ -132,8 +132,8 @@ function playVideo(url) {
   
   // Updated URL with proper parameters for Vercel
   const embedUrl = url.replace('watch?v=', 'embed/') + 
-    '?autoplay=1&enablejsapi=1&origin=https://kiko-beam-middleware.vercel.app' + 
-    '&rel=0&modestbranding=1&playsinline=1';
+    '?autoplay=1&enablejsapi=1&origin=' + window.location.origin + 
+    '&rel=0&modestbranding=1&playsinline=1&allow=autoplay';
     
   videoIframe.src = embedUrl;
   youtubePlayerState = 'playing';
