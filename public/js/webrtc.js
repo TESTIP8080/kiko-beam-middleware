@@ -48,6 +48,12 @@ class KikoWebRTC {
         }
       }
       
+      // Stop speech recognition and clear queue
+      if (recognition && recognition._isRunning) {
+        recognition.stop();
+      }
+      clearSpeechQueue();
+      
       // Generate room URL
       this.roomName = roomId || `kiko-${Date.now()}`;
       this.roomUrl = `${this.baseUrl}/${this.roomName}`;
@@ -308,6 +314,15 @@ class KikoWebRTC {
     
     this._updateStatus('Hyperjump ended', 'disconnected');
     this.soundController.playDisconnect();
+
+    // Restart speech recognition after call ends
+    if (recognition && !recognition._isRunning) {
+      try {
+        recognition.start();
+      } catch(e) {
+        console.error("Error restarting speech recognition:", e);
+      }
+    }
   }
   
   toggleAudio() {

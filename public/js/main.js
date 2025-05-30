@@ -249,7 +249,7 @@ suggestTopics = function() {
     afternoon: [
       "🌤️ How's your day going? Want to watch something relaxing or uplifting?",
       "⚡ Need a break? I can play music, funny videos, or we could try a hyperjump call!",
-      "🎯 Afternoon! Time for entertainment? Just name any artist, topic, or say 'call KiKo 2'!",
+      "🎯 Afternoon! Time for entertainment? Just name any artist, topic, or say 'teleport kiko'!",
       "🎪 Midday entertainment! Try 'productivity music' or 'interesting documentaries'"
     ],
     evening: [
@@ -279,10 +279,10 @@ suggestTopics = function() {
   // Context-aware suggestions
   if (window.kikoWebRTC && !window.kikoWebRTC.callInProgress && timeCategory !== 'night') {
     const hyperjumpSuggestions = [
-      "🚀 Want to try the hyperjump system? Say 'call KiKo 2' for a demo!",
-      "🌌 The quantum network is ready! Try 'show contacts' or 'call KiKo 2'",
+      "🚀 Want to try the hyperjump system? Say 'teleport kiko' for a demo!",
+      "🌌 The quantum network is ready! Try 'show contacts' or 'teleport kiko'",
       "⚡ Hyperjump systems online! Ready to connect across space-time?",
-      "🛸 Feel like exploring? Say 'hyperjump to KiKo 2' or add new contacts!"
+      "🛸 Feel like exploring? Say 'teleport kiko' or add new contacts!"
     ];
     
     if (Math.random() < 0.3) { // 30% chance for hyperjump suggestion
