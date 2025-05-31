@@ -157,17 +157,31 @@ function speakResponse(text, speechId = null) {
 
 // Setup speech recognition
 function setupSpeechRecognition() {
-  if (!('webkitSpeechRecognition' in window)) {
+  if (!('webkitSpeechRecognition' in window) && !window.GoogleSpeechRecognition) {
     addMessage('Browser does not support speech recognition', false, true);
     if (window.voiceBtn) window.voiceBtn.disabled = true; 
     return null;
   }
   
-  const rec = new webkitSpeechRecognition();
-  rec.continuous = true;
-  rec.interimResults = true;
-  rec.lang = 'en-US';
-  rec.maxAlternatives = 3;
+  // Try to use GoogleSpeechRecognition first, fallback to webkitSpeechRecognition
+  let rec;
+  if (window.GoogleSpeechRecognition) {
+    rec = new GoogleSpeechRecognition({
+      middleware_url: window.location.origin,
+      language: 'en-US',
+      volumeMeter: (level) => {
+        if (window.volumeLevel) {
+          window.volumeLevel.style.width = level + '%';
+        }
+      }
+    });
+  } else {
+    rec = new webkitSpeechRecognition();
+    rec.continuous = true;
+    rec.interimResults = true;
+    rec.lang = 'en-US';
+    rec.maxAlternatives = 3;
+  }
   
   // Additional properties
   rec._isRunning = false;
