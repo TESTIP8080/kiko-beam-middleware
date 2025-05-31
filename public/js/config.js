@@ -2,10 +2,10 @@
 const config = {
   GEMINI_API_KEY: 'AIzaSyB0nsn5A_a6nAtGQsIZ-RZGrotGoCJaF8A',
   YOUTUBE_API_KEY: 'AIzaSyDt1cRmHyYNEPnu78Wt4Y_RgXNhKwD2Q44',
-  DEFAULT_CITY: 'Moscow',
-  DEFAULT_LAT: 55.7558, // Moscow coordinates
-  DEFAULT_LON: 37.6173,
-  DEFAULT_TIMEZONE: 'Europe/Moscow'
+  DEFAULT_CITY: 'Bishkek',
+  DEFAULT_LAT: 42.8746, // Bishkek coordinates
+  DEFAULT_LON: 74.5698,
+  DEFAULT_TIMEZONE: 'Asia/Bishkek'
 };
 
 // Daily.co configuration for hyperjump system
