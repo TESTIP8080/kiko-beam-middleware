@@ -124,7 +124,7 @@ function resetSilenceTimer() {
   
   // Set timer for silence detection
   silenceTimer = setTimeout(() => {
-    suggestTopics();
+    // suggestTopics(); // Удалено, чтобы ассистент молчал во время тишины
     resetSilenceTimer(); // Reset for next suggestion
   }, SILENCE_TIMEOUT);
 }

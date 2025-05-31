@@ -69,6 +69,12 @@ function addMessage(text, isUser = false, isError = false, isSystem = false) {
     return;
   }
   
+  // Обрезаем длинные ответы ассистента
+  if (!isUser && !isError && !isSystem) {
+    const sentences = text.split(/[.!?]\s/);
+    text = sentences.slice(0, 2).join('. ') + (sentences.length > 2 ? '...' : '');
+  }
+  
   const messageDiv = document.createElement('div');
   messageDiv.classList.add('message');
   
