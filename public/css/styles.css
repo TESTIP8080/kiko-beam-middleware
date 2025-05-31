@@ -76,6 +76,8 @@ body {
   transition: all 0.3s ease;
   border: 1px solid rgba(3, 218, 198, 0.3);
   backdrop-filter: blur(5px);
+  color: var(--text-primary);
+  z-index: 1000;
 }
 
 .weather-widget:hover {

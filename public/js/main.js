@@ -675,7 +675,13 @@ function updateWeatherDisplay(weather) {
   
   if (window.weatherInfo) {
     // Update time and weather
-    updateTimeDisplay();
+    const time = new Date().toLocaleTimeString('ru-RU', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: false 
+    });
+    window.weatherInfo.innerHTML = `${time} | ${weather.city}: ${weather.temp}°C, ${weather.description}`;
+    window.weatherWidget.classList.add('active');
   } else {
     console.error('Weather info element not found');
   }
