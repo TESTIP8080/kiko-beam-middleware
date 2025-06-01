@@ -200,8 +200,17 @@ async function activateCamera() {
     captureBtn.innerHTML = 'Take Photo';
     captureBtn.onclick = capturePhoto;
     
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'media-close';
+    closeBtn.innerHTML = '×';
+    closeBtn.onclick = () => {
+      stopCamera();
+      if (window.mediaPanel) window.mediaPanel.classList.remove('active');
+    };
+    
     controls.appendChild(captureBtn);
     document.querySelector('.media-container').appendChild(controls);
+    document.querySelector('.media-container').appendChild(closeBtn);
     
     // Load saved photos
     loadSavedPhotos();
@@ -213,10 +222,14 @@ async function activateCamera() {
       window.youtubeContainer.style.display = 'none';
     }
     
-    speakText('Camera turned on');
+    if (typeof window.speakText === 'function') {
+      window.speakText('Camera turned on');
+    }
   } catch (error) {
     console.error('Error activating camera:', error);
-    speakText('Error activating camera');
+    if (typeof window.speakText === 'function') {
+      window.speakText('Error activating camera');
+    }
   }
 }
 
