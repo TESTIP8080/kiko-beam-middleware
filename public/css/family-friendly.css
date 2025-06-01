@@ -159,8 +159,8 @@ body {
     background: transparent;
     position: relative;
     z-index: 1;
-    height: calc(100vh - 100px);
-    margin-top: 10px;
+    height: calc(100vh - 80px);
+    margin-top: 0;
 }
 
 /* Chat panel */
@@ -193,7 +193,7 @@ body {
     margin-bottom: 16px;
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 255, 255, 0.3) transparent;
-    height: calc(100% - 80px);
+    height: calc(100% - 100px);
 }
 
 #chat-container::-webkit-scrollbar {
@@ -255,11 +255,11 @@ body {
     background: rgba(0, 0, 0, 0.2);
     border-radius: 20px;
     backdrop-filter: none;
-    height: 56px;
+    height: 80px;
     align-items: center;
     margin-top: auto;
     width: 100%;
-    max-width: 800px;
+    max-width: 600px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -388,6 +388,9 @@ body {
     margin: 0;
     border: none;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #camera-preview, #youtube-iframe {
@@ -398,6 +401,9 @@ body {
     background: transparent;
     border: none;
     outline: none;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 /* Photo gallery */
