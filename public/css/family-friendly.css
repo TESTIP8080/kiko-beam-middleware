@@ -80,12 +80,12 @@ body {
 /* Header */
 .header {
     background: rgba(0, 0, 0, 0.7);
-    padding: 20px 24px;
+    padding: 10px 24px;
     text-align: center;
     position: relative;
     z-index: 100;
     backdrop-filter: blur(20px);
-    height: 80px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -94,7 +94,7 @@ body {
 .header h1 {
     margin: 0;
     font-family: 'Gotham', sans-serif;
-    font-size: 2.4rem;
+    font-size: 2rem;
     font-weight: 500;
     letter-spacing: 2px;
     background: var(--gradient-1);
@@ -159,8 +159,8 @@ body {
     background: transparent;
     position: relative;
     z-index: 1;
-    height: calc(100vh - 120px); /* Увеличиваем отступ от хедера */
-    margin-top: 20px; /* Добавляем отступ сверху */
+    height: calc(100vh - 100px);
+    margin-top: 10px;
 }
 
 /* Chat panel */
@@ -193,7 +193,7 @@ body {
     margin-bottom: 16px;
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 255, 255, 0.3) transparent;
-    height: calc(100% - 80px); /* Учитываем высоту input-container */
+    height: calc(100% - 80px);
 }
 
 #chat-container::-webkit-scrollbar {
@@ -255,9 +255,13 @@ body {
     background: rgba(0, 0, 0, 0.2);
     border-radius: 20px;
     backdrop-filter: none;
-    height: 60px;
+    height: 56px;
     align-items: center;
     margin-top: auto;
+    width: 100%;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #user-input {
