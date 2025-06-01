@@ -222,3 +222,39 @@ function initForTV() {
   document.querySelectorAll('button').forEach(btn => btn.setAttribute('tabindex', '0'));
   userInput.setAttribute('tabindex', '0');
 }
+
+// Particles animation
+function createParticle() {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.backgroundColor = ['#00d4ff', '#ff6b35', '#ffd93d', '#6bcf7f'][Math.floor(Math.random() * 4)];
+    document.getElementById('particles-container').appendChild(particle);
+    setTimeout(() => particle.remove(), 3000);
+}
+
+// Start particles animation
+setInterval(createParticle, 200);
+
+// Emoji rain
+const emojis = ['🎉', '🎈', '🎊', '⭐', '✨', '🌟', '💫', '🎯', '🎮', '🍿', '🍕', '🍰'];
+
+function createEmojiRain() {
+    const emoji = document.createElement('div');
+    emoji.className = 'emoji-rain';
+    emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    emoji.style.left = Math.random() * 100 + '%';
+    document.body.appendChild(emoji);
+    setTimeout(() => emoji.remove(), 5000);
+}
+
+// Add emoji rain to message sending
+const originalAddMessage = addMessage;
+addMessage = function(message, type) {
+    originalAddMessage(message, type);
+    if (type === 'user') {
+        for (let i = 0; i < 5; i++) {
+            setTimeout(createEmojiRain, i * 100);
+        }
+    }
+};

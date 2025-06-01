@@ -1,18 +1,21 @@
-/* KiKo Beam - Modern Design */
+/* KiKo Beam - Projector Design */
 
 :root {
-    --primary: #6366f1;
-    --primary-dark: #4f46e5;
-    --secondary: #f59e0b;
-    --accent: #ec4899;
-    --bg-dark: #0f172a;
-    --bg-medium: #1e293b;
-    --bg-light: #334155;
-    --text-primary: #f1f5f9;
-    --text-secondary: #cbd5e1;
-    --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    /* Высококонтрастные цвета */
+    --primary: #00d4ff;          /* Яркий неоновый голубой */
+    --primary-dark: #0099cc;     /* Темный голубой */
+    --secondary: #ff6b35;        /* Яркий оранжевый */
+    --accent: #ff1744;           /* Яркий красный */
+    --bg-dark: #000000;          /* Чистый черный */
+    --bg-medium: #0a0a0a;        /* Почти черный */
+    --bg-light: #1a1a1a;         /* Темно-серый */
+    --text-primary: #ffffff;     /* Белый текст */
+    --text-secondary: #e0e0e0;   /* Светло-серый текст */
+    
+    /* Градиенты */
+    --gradient-1: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+    --gradient-2: linear-gradient(135deg, #ff6b35 0%, #ff1744 100%);
+    --gradient-family: linear-gradient(135deg, #ff6b35 0%, #ffd93d 50%, #6bcf7f 100%);
 }
 
 /* Base styles */
@@ -24,31 +27,36 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    font-size: 16px;
 }
 
-body::before {
-    content: '';
+/* Particles container */
+#particles-container {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
-    animation: float 20s ease-in-out infinite;
     pointer-events: none;
     z-index: 0;
 }
 
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    animation: float 3s ease-in-out infinite;
+}
+
 /* Header */
 .header {
-    background: var(--bg-medium);
+    background: rgba(0, 0, 0, 0.9);
     padding: 20px 24px;
     text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     position: relative;
     z-index: 100;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
 }
 
 .header h1 {
@@ -68,23 +76,21 @@ body::before {
     position: absolute;
     top: 20px;
     right: 24px;
-    background: var(--bg-medium);
+    background: rgba(0, 0, 0, 0.9);
     padding: 8px 16px;
     border-radius: 16px;
-    font-size: 0.9rem;
+    font-size: 1rem;
     display: none;
     cursor: pointer;
     transition: all 0.3s ease;
     color: var(--text-primary);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    z-index: 101;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
 }
 
 .weather-widget:hover {
-    background: var(--bg-light);
+    background: var(--primary);
+    color: var(--bg-dark);
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 .weather-widget.active {
@@ -96,15 +102,13 @@ body::before {
     position: absolute;
     top: 20px;
     left: 24px;
-    background: var(--bg-medium);
+    background: rgba(0, 0, 0, 0.9);
     padding: 8px 16px;
     border-radius: 16px;
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: var(--text-primary);
     display: none;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    z-index: 101;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
 }
 
 .dialog-state.active {
@@ -128,13 +132,17 @@ body::before {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: rgba(30, 41, 59, 0.8);
+    background: rgba(10, 10, 10, 0.95);
     border-radius: 24px;
     padding: 24px;
     position: relative;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(20px);
+}
+
+.chat-panel.fullscreen {
+    width: 100%;
 }
 
 #chat-container {
@@ -157,29 +165,29 @@ body::before {
     word-wrap: break-word;
     animation: slideUp 0.3s ease-out;
     position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 1.1rem;
+    font-weight: 500;
 }
 
 .user-message {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
-    border: 1px solid rgba(99, 102, 241, 0.3);
-    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
+    background: var(--gradient-1);
+    color: var(--bg-dark);
+    box-shadow: 0 8px 32px rgba(0, 212, 255, 0.3);
     align-self: flex-end;
     margin-left: auto;
-    color: var(--text-primary);
 }
 
 .ai-message {
-    background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(239, 68, 68, 0.2));
-    border: 1px solid rgba(236, 72, 153, 0.3);
-    box-shadow: 0 4px 20px rgba(236, 72, 153, 0.2);
+    background: var(--gradient-family);
+    color: var(--bg-dark);
+    box-shadow: 0 8px 32px rgba(255, 107, 53, 0.3);
     align-self: flex-start;
 }
 
 .error-message {
     color: var(--accent);
-    background: rgba(236, 72, 153, 0.1);
-    border: 1px solid rgba(236, 72, 153, 0.2);
+    background: rgba(255, 23, 68, 0.1);
+    border: 2px solid var(--accent);
 }
 
 /* Input area */
@@ -187,19 +195,18 @@ body::before {
     display: flex;
     gap: 12px;
     padding: 12px;
-    background: rgba(51, 65, 85, 0.5);
+    background: rgba(0, 0, 0, 0.9);
     border-radius: 20px;
-    border: 2px solid transparent;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
 }
 
 #user-input {
     flex-grow: 1;
     padding: 12px 16px;
-    border: 2px solid transparent;
+    border: 2px solid var(--primary);
     border-radius: 20px;
-    font-size: 1rem;
-    background: rgba(51, 65, 85, 0.5);
+    font-size: 1.1rem;
+    background: rgba(0, 0, 0, 0.5);
     color: var(--text-primary);
     transition: all 0.3s ease;
 }
@@ -207,31 +214,33 @@ body::before {
 #user-input:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.2);
 }
 
 /* Buttons */
 #send-btn, #voice-btn {
     padding: 12px 24px;
-    border: none;
+    border: 2px solid var(--primary);
     border-radius: 20px;
-    background: var(--gradient-1);
-    color: white;
+    background: transparent;
+    color: var(--text-primary);
     cursor: pointer;
     font-weight: 500;
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 1px;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 #send-btn:hover, #voice-btn:hover {
+    background: var(--primary);
+    color: var(--bg-dark);
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 #voice-btn.active {
     background: var(--gradient-2);
+    border-color: transparent;
     animation: pulse 2s ease-in-out infinite;
 }
 
@@ -242,17 +251,23 @@ body::before {
     border-radius: 24px;
     padding: 0;
     display: none;
-    border: 1px solid rgba(255, 255, 255, 0.1);
     position: relative;
     z-index: 2;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .media-panel.active {
     display: flex;
+}
+
+.media-panel.hidden {
+    width: 0;
+    padding: 0;
+    opacity: 0;
+    pointer-events: none;
 }
 
 .media-container {
@@ -260,30 +275,13 @@ body::before {
     border-radius: 24px;
     padding: 0;
     margin: 0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     height: 100%;
     width: 100%;
     position: relative;
-}
-
-.media-container:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-}
-
-.media-container::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    background: var(--gradient-1);
-    border-radius: 24px;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.media-container:hover::before {
-    opacity: 1;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 .media-container h4 {
@@ -306,6 +304,7 @@ body::before {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: inherit;
 }
 
 .youtube-controls {
@@ -315,12 +314,12 @@ body::before {
     transform: translateX(-50%);
     display: flex;
     gap: 12px;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.8);
     padding: 8px 16px;
     border-radius: 16px;
     opacity: 0;
     transition: opacity 0.3s ease;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
 }
 
 #video-area:hover .youtube-controls {
@@ -329,21 +328,22 @@ body::before {
 
 .youtube-controls button {
     padding: 8px 16px;
-    border: none;
+    border: 2px solid var(--primary);
     border-radius: 16px;
-    background: var(--gradient-1);
-    color: white;
+    background: transparent;
+    color: var(--text-primary);
     cursor: pointer;
     font-weight: 500;
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 1px;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 .youtube-controls button:hover {
+    background: var(--primary);
+    color: var(--bg-dark);
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* Media panel states */
@@ -359,75 +359,22 @@ body::before {
     height: 50%;
 }
 
-.media-panel.double-media #camera-container {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Teleport area */
-#teleport-area {
+/* Emoji rain */
+.emoji-rain {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--bg-dark);
-    display: none;
+    font-size: 2rem;
+    animation: fall 5s linear forwards;
     z-index: 1000;
-    padding: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    pointer-events: none;
 }
 
-#teleport-area.hyperjump-active {
-    display: flex;
-    flex-direction: column;
-}
-
-.contact-manager {
-    background: var(--bg-medium);
-    border-radius: 24px;
-    padding: 24px;
-    margin-bottom: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-}
-
-.contact-manager h3 {
-    color: var(--text-primary);
-    margin-bottom: 20px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 1.2rem;
-    text-align: center;
-}
-
-/* QR code container */
-#qr-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--bg-medium);
-    padding: 32px;
-    border-radius: 24px;
-    text-align: center;
-    z-index: 2000;
-    display: none;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-}
-
-#qr-container h3 {
-    color: var(--text-primary);
-    margin-bottom: 20px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 1.2rem;
-}
-
-#qr-container.active {
-    display: block;
+@keyframes fall {
+    from {
+        transform: translateY(-100vh) rotate(0deg);
+    }
+    to {
+        transform: translateY(100vh) rotate(360deg);
+    }
 }
 
 /* Animations */
@@ -454,28 +401,24 @@ body::before {
         padding: 16px;
     }
     
-    .media-panel.active {
-        width: 100%;
-        height: 50vh;
-    }
-    
-    .media-panel.single-media {
-        width: 100%;
-        height: 50vh;
-    }
-    
-    .media-panel.double-media {
-        width: 100%;
-        height: 50vh;
-    }
-    
-    .media-panel.double-media .media-container {
-        height: 50%;
-    }
-    
     .chat-panel {
-        margin-bottom: 16px;
-        padding: 16px;
+        width: 100% !important;
+        height: 50vh;
+        order: 2;
+    }
+    
+    .media-panel {
+        width: 100% !important;
+        height: 50vh;
+        order: 1;
+    }
+    
+    .media-panel.hidden {
+        height: 0;
+    }
+    
+    .chat-panel.fullscreen {
+        height: 100vh;
     }
     
     .header {
@@ -487,7 +430,7 @@ body::before {
     }
     
     .weather-widget, .dialog-state {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         padding: 6px 12px;
     }
 }
