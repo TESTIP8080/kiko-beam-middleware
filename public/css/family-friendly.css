@@ -49,7 +49,7 @@ body {
     height: 2px;
     background: #ffffff;
     border-radius: 50%;
-    animation: starTrail 3s linear infinite;
+    animation: starTrail 8s linear infinite;
     opacity: 0;
 }
 
@@ -62,19 +62,19 @@ body {
     height: 100%;
     background: linear-gradient(90deg, transparent, #ffffff, transparent);
     transform: translateX(-100%);
-    animation: starTrail 3s linear infinite;
+    animation: starTrail 8s linear infinite;
 }
 
 .particle:nth-child(odd) {
     width: 3px;
     height: 3px;
-    animation-duration: 4s;
+    animation-duration: 10s;
 }
 
 .particle:nth-child(3n) {
     width: 1px;
     height: 1px;
-    animation-duration: 2s;
+    animation-duration: 6s;
 }
 
 /* Header */
@@ -214,20 +214,20 @@ body {
 }
 
 .user-message {
-    background: rgba(0, 212, 255, 0.15);
+    background: rgba(255, 255, 255, 0.1);
     color: var(--text-primary);
-    box-shadow: 0 8px 32px rgba(0, 212, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
     align-self: flex-end;
     margin-left: auto;
-    border: 1px solid rgba(0, 212, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .ai-message {
-    background: rgba(255, 107, 53, 0.15);
+    background: rgba(255, 255, 255, 0.1);
     color: var(--text-primary);
-    box-shadow: 0 8px 32px rgba(255, 107, 53, 0.15);
+    box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
     align-self: flex-start;
-    border: 1px solid rgba(255, 107, 53, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .error-message {
@@ -241,7 +241,7 @@ body {
     display: flex;
     gap: 12px;
     padding: 12px;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 20px;
     backdrop-filter: blur(10px);
 }
@@ -249,24 +249,24 @@ body {
 #user-input {
     flex-grow: 1;
     padding: 12px 16px;
-    border: 2px solid rgba(0, 212, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 20px;
     font-size: 1.1rem;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.05);
     color: var(--text-primary);
     transition: all 0.3s ease;
 }
 
 #user-input:focus {
     outline: none;
-    border-color: rgba(0, 212, 255, 0.5);
-    box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
 }
 
 /* Buttons */
 #send-btn, #voice-btn {
     padding: 12px 24px;
-    border: 2px solid rgba(0, 212, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 20px;
     background: transparent;
     color: var(--text-primary);
@@ -279,14 +279,14 @@ body {
 }
 
 #send-btn:hover, #voice-btn:hover {
-    background: rgba(0, 212, 255, 0.2);
-    border-color: rgba(0, 212, 255, 0.5);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
     transform: translateY(-2px);
 }
 
 #voice-btn.active {
-    background: rgba(255, 107, 53, 0.2);
-    border-color: rgba(255, 107, 53, 0.5);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
     animation: pulse 2s ease-in-out infinite;
 }
 
@@ -376,6 +376,8 @@ body {
     object-fit: cover;
     border-radius: 24px;
     background: transparent;
+    border: none;
+    outline: none;
 }
 
 .youtube-controls {

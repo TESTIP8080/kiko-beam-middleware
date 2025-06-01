@@ -266,11 +266,11 @@ function createStar(container = 'particles-container') {
     star.style.top = y + 'px';
     
     // Random horizontal movement
-    const xOffset = (Math.random() - 0.5) * 100; // Random horizontal drift
+    const xOffset = (Math.random() - 0.5) * 50; // Random horizontal drift
     star.style.setProperty('--x', xOffset + 'px');
     
     document.getElementById(container).appendChild(star);
-    setTimeout(() => star.remove(), 3000); // Match with animation duration
+    setTimeout(() => star.remove(), 10000); // Match with longest animation duration
 }
 
 // Create initial stars
@@ -279,7 +279,7 @@ for (let i = 0; i < 50; i++) {
 }
 
 // Continue creating stars
-setInterval(createStar, 100);
+setInterval(createStar, 200);
 
 // Add stars to chat container
 function addStarsToChat() {
@@ -309,7 +309,7 @@ function addStarsToChat() {
     }
     
     // Continue creating stars in chat
-    setInterval(() => createStar('chat-particles'), 100);
+    setInterval(() => createStar('chat-particles'), 200);
 }
 
 // Emoji rain
