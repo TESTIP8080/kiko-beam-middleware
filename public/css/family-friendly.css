@@ -153,11 +153,13 @@ body {
     background: transparent;
     position: relative;
     z-index: 1;
+    height: calc(100vh - 80px); /* Учитываем высоту хедера */
 }
 
 /* Chat panel */
 .chat-panel {
     width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     background: rgba(0, 0, 0, 0.2);
@@ -184,6 +186,7 @@ body {
     margin-bottom: 16px;
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 255, 255, 0.3) transparent;
+    height: calc(100% - 80px); /* Учитываем высоту input-container */
 }
 
 #chat-container::-webkit-scrollbar {
@@ -211,6 +214,7 @@ body {
     font-size: 1.1rem;
     font-weight: 500;
     backdrop-filter: none;
+    line-height: 1.5;
 }
 
 .user-message {
@@ -244,6 +248,8 @@ body {
     background: rgba(0, 0, 0, 0.2);
     border-radius: 20px;
     backdrop-filter: none;
+    height: 60px;
+    align-items: center;
 }
 
 #user-input {
@@ -255,6 +261,7 @@ body {
     background: rgba(0, 0, 0, 0.2);
     color: var(--text-primary);
     transition: all 0.3s ease;
+    height: 100%;
 }
 
 #user-input:focus {
@@ -293,6 +300,7 @@ body {
 /* Media panel */
 .media-panel {
     width: 50%;
+    height: 100%;
     background: transparent;
     border-radius: 24px;
     padding: 0;
@@ -393,6 +401,7 @@ body {
     background: rgba(0, 0, 0, 0.3);
     border-radius: 16px;
     z-index: 10;
+    height: 100px;
 }
 
 .photo-item {
@@ -445,6 +454,8 @@ body {
     padding: 8px 16px;
     border-radius: 16px;
     z-index: 10;
+    height: 48px;
+    align-items: center;
 }
 
 .camera-controls button {
@@ -459,6 +470,10 @@ body {
     text-transform: uppercase;
     letter-spacing: 1px;
     font-size: 1rem;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .camera-controls button:hover {
