@@ -137,13 +137,42 @@ function updateRecognitionStatus(status) {
 
 // Toggle media panel
 function toggleMediaPanel(show = true) {
-  if (show) {
-    mediaPanel.classList.add('active');
-  } else {
-    if (!isCameraActive && youtubePlayerState === 'stopped') {
-      mediaPanel.classList.remove('active');
+    const chatPanel = document.querySelector('.chat-panel');
+    const mediaPanel = document.querySelector('.media-panel');
+    
+    if (show) {
+        mediaPanel.classList.add('active');
+        chatPanel.classList.add('with-media');
+    } else {
+        if (!isCameraActive && youtubePlayerState === 'stopped') {
+            mediaPanel.classList.remove('active');
+            chatPanel.classList.remove('with-media');
+        }
     }
-  }
+}
+
+// Update media panel layout
+function updateMediaLayout() {
+    const mediaPanel = document.querySelector('.media-panel');
+    const cameraContainer = document.getElementById('camera-container');
+    const youtubeContainer = document.getElementById('youtube-container');
+    
+    if (isCameraActive && youtubePlayerState !== 'stopped') {
+        mediaPanel.classList.add('double-media');
+        cameraContainer.style.display = 'flex';
+        youtubeContainer.style.display = 'flex';
+    } else if (isCameraActive) {
+        mediaPanel.classList.remove('double-media');
+        cameraContainer.style.display = 'flex';
+        youtubeContainer.style.display = 'none';
+    } else if (youtubePlayerState !== 'stopped') {
+        mediaPanel.classList.remove('double-media');
+        cameraContainer.style.display = 'none';
+        youtubeContainer.style.display = 'flex';
+    } else {
+        mediaPanel.classList.remove('active');
+        document.querySelector('.chat-panel').classList.remove('with-media');
+    }
 }
 
 // Weather display
