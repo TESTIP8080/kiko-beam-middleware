@@ -1,11 +1,11 @@
 /* KiKo Beam - Projector Design */
 
 :root {
-    /* Высококонтрастные цвета */
-    --primary: #00d4ff;          /* Яркий неоновый голубой */
-    --primary-dark: #0099cc;     /* Темный голубой */
-    --secondary: #ff6b35;        /* Яркий оранжевый */
-    --accent: #ff1744;           /* Яркий красный */
+    /* Космические цвета для проектора */
+    --primary: #00ffff;          /* Яркий голубой */
+    --primary-dark: #00b3b3;     /* Темный голубой */
+    --secondary: #ff00ff;        /* Яркий пурпурный */
+    --accent: #ff3366;           /* Яркий розовый */
     --bg-dark: #000000;          /* Чистый черный */
     --bg-medium: #0a0a0a;        /* Почти черный */
     --bg-light: #1a1a1a;         /* Темно-серый */
@@ -13,9 +13,9 @@
     --text-secondary: #e0e0e0;   /* Светло-серый текст */
     
     /* Градиенты */
-    --gradient-1: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
-    --gradient-2: linear-gradient(135deg, #ff6b35 0%, #ff1744 100%);
-    --gradient-family: linear-gradient(135deg, #ff6b35 0%, #ffd93d 50%, #6bcf7f 100%);
+    --gradient-1: linear-gradient(135deg, #00ffff 0%, #00b3b3 100%);
+    --gradient-2: linear-gradient(135deg, #ff00ff 0%, #ff3366 100%);
+    --gradient-cosmic: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ff3366 100%);
 }
 
 /* Base styles */
@@ -160,13 +160,13 @@ body {
     width: 100%;
     display: flex;
     flex-direction: column;
-    background: rgba(10, 10, 10, 0.2);
+    background: rgba(0, 0, 0, 0.2);
     border-radius: 24px;
     padding: 24px;
     position: relative;
     overflow: hidden;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(5px);
+    backdrop-filter: none;
 }
 
 .chat-panel.with-media {
@@ -183,7 +183,7 @@ body {
     padding: 16px;
     margin-bottom: 16px;
     scrollbar-width: thin;
-    scrollbar-color: rgba(0, 212, 255, 0.3) transparent;
+    scrollbar-color: rgba(0, 255, 255, 0.3) transparent;
 }
 
 #chat-container::-webkit-scrollbar {
@@ -195,7 +195,7 @@ body {
 }
 
 #chat-container::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 212, 255, 0.3);
+    background-color: rgba(0, 255, 255, 0.3);
     border-radius: 4px;
 }
 
@@ -210,24 +210,24 @@ body {
     position: relative;
     font-size: 1.1rem;
     font-weight: 500;
-    backdrop-filter: blur(5px);
+    backdrop-filter: none;
 }
 
 .user-message {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 255, 255, 0.1);
     color: var(--text-primary);
-    box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 255, 255, 0.1);
     align-self: flex-end;
     margin-left: auto;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(0, 255, 255, 0.2);
 }
 
 .ai-message {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 0, 255, 0.1);
     color: var(--text-primary);
-    box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(255, 0, 255, 0.1);
     align-self: flex-start;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 0, 255, 0.2);
 }
 
 .error-message {
@@ -241,32 +241,32 @@ body {
     display: flex;
     gap: 12px;
     padding: 12px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.2);
     border-radius: 20px;
-    backdrop-filter: blur(10px);
+    backdrop-filter: none;
 }
 
 #user-input {
     flex-grow: 1;
     padding: 12px 16px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(0, 255, 255, 0.2);
     border-radius: 20px;
     font-size: 1.1rem;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.2);
     color: var(--text-primary);
     transition: all 0.3s ease;
 }
 
 #user-input:focus {
     outline: none;
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+    border-color: rgba(0, 255, 255, 0.4);
+    box-shadow: 0 0 0 4px rgba(0, 255, 255, 0.1);
 }
 
 /* Buttons */
 #send-btn, #voice-btn {
     padding: 12px 24px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(0, 255, 255, 0.2);
     border-radius: 20px;
     background: transparent;
     color: var(--text-primary);
@@ -279,14 +279,14 @@ body {
 }
 
 #send-btn:hover, #voice-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(0, 255, 255, 0.1);
+    border-color: rgba(0, 255, 255, 0.4);
     transform: translateY(-2px);
 }
 
 #voice-btn.active {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 0, 255, 0.1);
+    border-color: rgba(255, 0, 255, 0.4);
     animation: pulse 2s ease-in-out infinite;
 }
 
