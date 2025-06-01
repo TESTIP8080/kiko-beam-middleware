@@ -165,7 +165,7 @@ body {
 
 /* Chat panel */
 .chat-panel {
-    width: 50%;
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -178,8 +178,8 @@ body {
     backdrop-filter: none;
 }
 
-.chat-panel.fullscreen {
-    width: 100%;
+.chat-panel.with-media {
+    width: 50%;
 }
 
 #chat-container {
@@ -190,10 +190,10 @@ body {
     background: transparent;
     border-radius: 16px;
     padding: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 0;
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 255, 255, 0.3) transparent;
-    height: calc(100% - 100px);
+    height: auto;
 }
 
 #chat-container::-webkit-scrollbar {
@@ -257,7 +257,7 @@ body {
     backdrop-filter: none;
     height: 64px;
     align-items: center;
-    margin-top: 0;
+    margin-top: 16px;
     width: 100%;
     max-width: unset;
     margin-left: 0;
@@ -319,7 +319,7 @@ body {
     background: transparent;
     border-radius: 24px;
     padding: 0;
-    display: flex;
+    display: none;
     flex-direction: column;
     position: relative;
     z-index: 2;
