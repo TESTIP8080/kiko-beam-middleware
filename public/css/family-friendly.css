@@ -49,20 +49,20 @@ body {
     height: 2px;
     background: #ffffff;
     border-radius: 50%;
-    animation: float 20s linear infinite;
+    animation: floatDown 30s linear infinite;
     opacity: 0.8;
 }
 
 .particle:nth-child(odd) {
     width: 3px;
     height: 3px;
-    animation-duration: 15s;
+    animation-duration: 40s;
 }
 
 .particle:nth-child(3n) {
     width: 1px;
     height: 1px;
-    animation-duration: 25s;
+    animation-duration: 50s;
 }
 
 /* Header */
@@ -480,9 +480,9 @@ body {
 }
 
 /* Animations */
-@keyframes float {
+@keyframes floatDown {
     0% {
-        transform: translate(0, 0) rotate(0deg);
+        transform: translateY(-100vh) translateX(0);
         opacity: 0;
     }
     10% {
@@ -492,7 +492,7 @@ body {
         opacity: 0.8;
     }
     100% {
-        transform: translate(var(--x), var(--y)) rotate(360deg);
+        transform: translateY(100vh) translateX(var(--x));
         opacity: 0;
     }
 }
