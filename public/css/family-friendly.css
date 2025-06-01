@@ -380,28 +380,76 @@ body {
     outline: none;
 }
 
-.youtube-controls {
+/* Photo gallery */
+#photo-gallery {
     position: absolute;
-    bottom: 16px;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 16px;
+    z-index: 10;
+}
+
+.photo-item {
+    width: 100px;
+    height: 75px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.photo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.photo-item .delete-photo {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 0, 0, 0.5);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.photo-item:hover .delete-photo {
+    opacity: 1;
+}
+
+/* Camera controls */
+.camera-controls {
+    position: absolute;
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     gap: 12px;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.3);
     padding: 8px 16px;
     border-radius: 16px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    backdrop-filter: blur(10px);
+    z-index: 10;
 }
 
-#video-area:hover .youtube-controls {
-    opacity: 1;
-}
-
-.youtube-controls button {
+.camera-controls button {
     padding: 8px 16px;
-    border: 2px solid var(--primary);
+    border: 2px solid rgba(0, 255, 255, 0.2);
     border-radius: 16px;
     background: transparent;
     color: var(--text-primary);
@@ -413,9 +461,9 @@ body {
     font-size: 1rem;
 }
 
-.youtube-controls button:hover {
-    background: var(--primary);
-    color: var(--bg-dark);
+.camera-controls button:hover {
+    background: rgba(0, 255, 255, 0.1);
+    border-color: rgba(0, 255, 255, 0.4);
     transform: translateY(-2px);
 }
 

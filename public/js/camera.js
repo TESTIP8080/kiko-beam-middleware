@@ -57,40 +57,160 @@ function stopCamera() {
 }
 
 // Capture photo
-function capturePhoto() {
+async function capturePhoto() {
   if (!cameraStream) { 
     addMessage('Camera is not on', false, true); 
     return; 
   }
   
-  const canvas = document.createElement('canvas');
-  canvas.width = cameraPreview.videoWidth;
-  canvas.height = cameraPreview.videoHeight;
-  canvas.getContext('2d').drawImage(cameraPreview, 0, 0, canvas.width, canvas.height);
-  lastPhotoDataUrl = canvas.toDataURL('image/jpeg');
-  
-  const img = document.createElement('img');
-  img.src = lastPhotoDataUrl;
-  img.style.maxWidth='100%'; 
-  img.style.maxHeight='200px';
-  
-  const dl = document.createElement('button');
-  dl.textContent='Download photo';
-  dl.style.marginLeft='10px';
-  dl.onclick = () => {
-    if (!lastPhotoDataUrl) {
-      addMessage('No saved photo', false, true);
-      return;
+  try {
+    const canvas = document.createElement('canvas');
+    canvas.width = cameraPreview.videoWidth;
+    canvas.height = cameraPreview.videoHeight;
+    const ctx = canvas.getContext('2d');
+    
+    // Draw the current video frame
+    ctx.drawImage(cameraPreview, 0, 0, canvas.width, canvas.height);
+    
+    // Convert to blob
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
+    
+    // Create photo gallery if it doesn't exist
+    let photoGallery = document.getElementById('photo-gallery');
+    if (!photoGallery) {
+      photoGallery = document.createElement('div');
+      photoGallery.id = 'photo-gallery';
+      document.querySelector('.media-container').appendChild(photoGallery);
     }
-    const a = document.createElement('a'); 
-    a.href = lastPhotoDataUrl; 
-    a.download = 'photo.jpg'; 
-    a.click(); 
-  };
+    
+    // Create photo item
+    const photoItem = document.createElement('div');
+    photoItem.className = 'photo-item';
+    
+    // Create image
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(blob);
+    
+    // Create delete button
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'delete-photo';
+    deleteBtn.innerHTML = '×';
+    deleteBtn.onclick = () => {
+      photoItem.remove();
+      if (photoGallery.children.length === 0) {
+        photoGallery.remove();
+      }
+    };
+    
+    // Add elements to photo item
+    photoItem.appendChild(img);
+    photoItem.appendChild(deleteBtn);
+    photoGallery.appendChild(photoItem);
+    
+    // Save photo to localStorage
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const photos = JSON.parse(localStorage.getItem('camera_photos') || '[]');
+      photos.push(reader.result);
+      localStorage.setItem('camera_photos', JSON.stringify(photos));
+    };
+    reader.readAsDataURL(blob);
+    
+    // Speak confirmation
+    speakText('Photo taken');
+    
+  } catch (error) {
+    console.error('Error capturing photo:', error);
+    speakText('Error taking photo');
+  }
+}
+
+// Load saved photos on startup
+function loadSavedPhotos() {
+  const photos = JSON.parse(localStorage.getItem('camera_photos') || '[]');
+  if (photos.length > 0) {
+    let photoGallery = document.getElementById('photo-gallery');
+    if (!photoGallery) {
+      photoGallery = document.createElement('div');
+      photoGallery.id = 'photo-gallery';
+      document.querySelector('.media-container').appendChild(photoGallery);
+    }
+    
+    photos.forEach(photoData => {
+      const photoItem = document.createElement('div');
+      photoItem.className = 'photo-item';
+      
+      const img = document.createElement('img');
+      img.src = photoData;
+      
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'delete-photo';
+      deleteBtn.innerHTML = '×';
+      deleteBtn.onclick = () => {
+        photoItem.remove();
+        const photos = JSON.parse(localStorage.getItem('camera_photos') || '[]');
+        const index = photos.indexOf(photoData);
+        if (index > -1) {
+          photos.splice(index, 1);
+          localStorage.setItem('camera_photos', JSON.stringify(photos));
+        }
+        if (photoGallery.children.length === 0) {
+          photoGallery.remove();
+        }
+      };
+      
+      photoItem.appendChild(img);
+      photoItem.appendChild(deleteBtn);
+      photoGallery.appendChild(photoItem);
+    });
+  }
+}
+
+// Call loadSavedPhotos when camera is activated
+async function activateCamera() {
+  if (isCameraActive) return;
   
-  const msg = addMessage('Photo taken:'); 
-  msg.appendChild(img); 
-  msg.appendChild(dl);
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        width: { ideal: 1920 },
+        height: { ideal: 1080 },
+        facingMode: 'environment'
+      }
+    });
+    
+    cameraPreview.srcObject = stream;
+    await cameraPreview.play();
+    
+    isCameraActive = true;
+    if (window.cameraArea) window.cameraArea.classList.add('active');
+    
+    // Add camera controls
+    const controls = document.createElement('div');
+    controls.className = 'camera-controls';
+    
+    const captureBtn = document.createElement('button');
+    captureBtn.innerHTML = 'Take Photo';
+    captureBtn.onclick = capturePhoto;
+    
+    controls.appendChild(captureBtn);
+    document.querySelector('.media-container').appendChild(controls);
+    
+    // Load saved photos
+    loadSavedPhotos();
+    
+    toggleMediaPanel(true);
+    if (window.cameraContainer) window.cameraContainer.style.display = 'flex';
+    
+    if (youtubePlayerState === 'stopped' && window.youtubeContainer) {
+      window.youtubeContainer.style.display = 'none';
+    }
+    
+    speakText('Camera turned on');
+  } catch (error) {
+    console.error('Error activating camera:', error);
+    speakText('Error activating camera');
+  }
 }
 
 // Start video recording
