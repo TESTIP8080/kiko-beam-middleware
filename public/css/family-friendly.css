@@ -1,11 +1,11 @@
 /* KiKo Beam - Projector Design */
 
 :root {
-    /* Космические цвета для проектора */
+    /* Star Trek colors */
     --primary: #00ffff;          /* Яркий голубой */
     --primary-dark: #00b3b3;     /* Темный голубой */
-    --secondary: #ff00ff;        /* Яркий пурпурный */
-    --accent: #ff3366;           /* Яркий розовый */
+    --secondary: #ffcc00;        /* Золотой */
+    --accent: #ff6600;           /* Оранжевый */
     --bg-dark: #000000;          /* Чистый черный */
     --bg-medium: #0a0a0a;        /* Почти черный */
     --bg-light: #1a1a1a;         /* Темно-серый */
@@ -14,8 +14,8 @@
     
     /* Градиенты */
     --gradient-1: linear-gradient(135deg, #00ffff 0%, #00b3b3 100%);
-    --gradient-2: linear-gradient(135deg, #ff00ff 0%, #ff3366 100%);
-    --gradient-cosmic: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ff3366 100%);
+    --gradient-2: linear-gradient(135deg, #ffcc00 0%, #ff6600 100%);
+    --gradient-cosmic: linear-gradient(135deg, #00ffff 0%, #ffcc00 50%, #ff6600 100%);
 }
 
 /* Base styles */
@@ -223,11 +223,11 @@ body {
 }
 
 .ai-message {
-    background: rgba(255, 0, 255, 0.1);
+    background: rgba(255, 204, 0, 0.1);
     color: var(--text-primary);
-    box-shadow: 0 8px 32px rgba(255, 0, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(255, 204, 0, 0.1);
     align-self: flex-start;
-    border: 1px solid rgba(255, 0, 255, 0.2);
+    border: 1px solid rgba(255, 204, 0, 0.2);
 }
 
 .error-message {

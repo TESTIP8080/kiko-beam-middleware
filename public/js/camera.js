@@ -116,12 +116,19 @@ async function capturePhoto() {
     };
     reader.readAsDataURL(blob);
     
-    // Speak confirmation
-    speakText('Photo taken');
+    // Speak confirmation if function exists
+    if (typeof window.speakText === 'function') {
+      window.speakText('Photo taken');
+    }
+    
+    addMessage('Photo taken', false, false, true);
     
   } catch (error) {
     console.error('Error capturing photo:', error);
-    speakText('Error taking photo');
+    if (typeof window.speakText === 'function') {
+      window.speakText('Error taking photo');
+    }
+    addMessage('Error taking photo', false, true);
   }
 }
 
