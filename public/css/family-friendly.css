@@ -165,7 +165,7 @@ body {
 
 /* Chat panel */
 .chat-panel {
-    width: 100%;
+    width: 50%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -178,8 +178,8 @@ body {
     backdrop-filter: none;
 }
 
-.chat-panel.with-media {
-    width: 50%;
+.chat-panel.fullscreen {
+    width: 100%;
 }
 
 #chat-container {
