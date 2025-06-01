@@ -251,17 +251,18 @@ body {
 #input-container {
     display: flex;
     gap: 12px;
-    padding: 12px;
+    padding: 12px 24px;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 20px;
     backdrop-filter: none;
-    height: 80px;
+    height: 64px;
     align-items: center;
-    margin-top: auto;
+    margin-top: 0;
     width: 100%;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    max-width: unset;
+    margin-left: 0;
+    margin-right: 0;
+    box-sizing: border-box;
     position: relative;
     z-index: 10;
 }
@@ -318,12 +319,11 @@ body {
     background: transparent;
     border-radius: 24px;
     padding: 0;
-    display: none;
+    display: flex;
+    flex-direction: column;
     position: relative;
     z-index: 2;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -338,18 +338,41 @@ body {
     pointer-events: none;
 }
 
+.media-panel.double-media .media-container {
+    height: 50%;
+}
+
 .media-container {
-    background: transparent;
+    background: rgba(0,0,0,0.25);
     border-radius: 24px;
-    padding: 0;
+    padding: 0 0 48px 0;
     margin: 0;
     height: 100%;
     width: 100%;
     position: relative;
     overflow: hidden;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
-    transform: translateZ(0);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    box-sizing: border-box;
+}
+
+.media-container h4 {
+    position: absolute;
+    top: 18px;
+    left: 24px;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 1px;
+    background: var(--gradient-2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    z-index: 2;
+    pointer-events: none;
 }
 
 /* QR code container */
@@ -391,8 +414,10 @@ body {
     border: none;
     position: relative;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
+    box-sizing: border-box;
 }
 
 #camera-preview, #youtube-iframe {
@@ -406,6 +431,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 1;
 }
 
 /* Photo gallery */
@@ -605,43 +631,19 @@ body {
 }
 
 /* Responsive design */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     .app-container {
         flex-direction: column;
-        padding: 16px;
     }
-    
-    .chat-panel {
+    .chat-panel, .media-panel {
         width: 100% !important;
         height: 50vh;
-        order: 2;
     }
-    
-    .media-panel {
-        width: 100% !important;
-        height: 50vh;
-        order: 1;
+    .media-panel.double-media .media-container {
+        height: 50%;
     }
-    
-    .media-panel.hidden {
-        height: 0;
-    }
-    
     .chat-panel.fullscreen {
         height: 100vh;
-    }
-    
-    .header {
-        padding: 16px;
-    }
-    
-    .header h1 {
-        font-size: 2rem;
-    }
-    
-    .weather-widget, .dialog-state {
-        font-size: 0.9rem;
-        padding: 6px 12px;
     }
 }
 
@@ -676,4 +678,38 @@ body {
 .media-close:hover {
     background: rgba(255, 0, 0, 0.5);
     transform: scale(1.1);
+}
+
+/* --- BUTTONS --- */
+#camera-btn, .youtube-controls button {
+    position: relative;
+    z-index: 2;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 8px 24px 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: all 0.3s;
+    outline: none;
+    display: inline-block;
+}
+
+#camera-btn:hover, .youtube-controls button:hover {
+    background: linear-gradient(135deg, var(--secondary), var(--primary));
+    transform: translateY(-2px) scale(1.04);
+}
+
+.youtube-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 24px;
+    z-index: 2;
+    position: relative;
 } 
