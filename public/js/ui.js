@@ -252,18 +252,37 @@ function initForTV() {
   userInput.setAttribute('tabindex', '0');
 }
 
-// Particles animation
-function createParticle() {
-    const particle = document.createElement('div');
-    particle.className = 'particle';
-    particle.style.left = Math.random() * 100 + '%';
-    particle.style.backgroundColor = ['#00d4ff', '#ff6b35', '#ffd93d', '#6bcf7f'][Math.floor(Math.random() * 4)];
-    document.getElementById('particles-container').appendChild(particle);
-    setTimeout(() => particle.remove(), 3000);
+// Starry background
+function createStar() {
+    const star = document.createElement('div');
+    star.className = 'particle';
+    
+    // Random position
+    const x = Math.random() * window.innerWidth;
+    const y = Math.random() * window.innerHeight;
+    star.style.left = x + 'px';
+    star.style.top = y + 'px';
+    
+    // Random movement
+    const angle = Math.random() * Math.PI * 2;
+    const distance = 100 + Math.random() * 200;
+    const targetX = x + Math.cos(angle) * distance;
+    const targetY = y + Math.sin(angle) * distance;
+    
+    star.style.setProperty('--x', (targetX - x) + 'px');
+    star.style.setProperty('--y', (targetY - y) + 'px');
+    
+    document.getElementById('particles-container').appendChild(star);
+    setTimeout(() => star.remove(), 20000);
 }
 
-// Start particles animation
-setInterval(createParticle, 200);
+// Create initial stars
+for (let i = 0; i < 100; i++) {
+    createStar();
+}
+
+// Continue creating stars
+setInterval(createStar, 200);
 
 // Emoji rain
 const emojis = ['🎉', '🎈', '🎊', '⭐', '✨', '🌟', '💫', '🎯', '🎮', '🍿', '🍕', '🍰'];
