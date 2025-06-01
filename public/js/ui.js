@@ -35,6 +35,8 @@ document.addEventListener('DOMContentLoaded', function() {
   // Weather elements
   window.weatherWidget = document.getElementById('weather-widget');
   window.weatherInfo = document.getElementById('weather-info');
+
+  addStarsToChat();
 });
 
 // Update dialog state UI
@@ -253,7 +255,7 @@ function initForTV() {
 }
 
 // Starry background
-function createStar() {
+function createStar(container = 'particles-container') {
     const star = document.createElement('div');
     star.className = 'particle';
     
@@ -272,7 +274,7 @@ function createStar() {
     star.style.setProperty('--x', (targetX - x) + 'px');
     star.style.setProperty('--y', (targetY - y) + 'px');
     
-    document.getElementById('particles-container').appendChild(star);
+    document.getElementById(container).appendChild(star);
     setTimeout(() => star.remove(), 20000);
 }
 
@@ -283,6 +285,37 @@ for (let i = 0; i < 100; i++) {
 
 // Continue creating stars
 setInterval(createStar, 200);
+
+// Add stars to chat container
+function addStarsToChat() {
+    const chatContainer = document.getElementById('chat-container');
+    if (!chatContainer) return;
+    
+    // Create particles container for chat if it doesn't exist
+    let chatParticles = document.getElementById('chat-particles');
+    if (!chatParticles) {
+        chatParticles = document.createElement('div');
+        chatParticles.id = 'chat-particles';
+        chatParticles.style.position = 'absolute';
+        chatParticles.style.top = '0';
+        chatParticles.style.left = '0';
+        chatParticles.style.right = '0';
+        chatParticles.style.bottom = '0';
+        chatParticles.style.pointerEvents = 'none';
+        chatParticles.style.zIndex = '0';
+        chatParticles.style.overflow = 'hidden';
+        chatContainer.style.position = 'relative';
+        chatContainer.appendChild(chatParticles);
+    }
+    
+    // Create stars in chat
+    for (let i = 0; i < 50; i++) {
+        createStar('chat-particles');
+    }
+    
+    // Continue creating stars in chat
+    setInterval(() => createStar('chat-particles'), 300);
+}
 
 // Emoji rain
 const emojis = ['🎉', '🎈', '🎊', '⭐', '✨', '🌟', '💫', '🎯', '🎮', '🍿', '🍕', '🍰'];
