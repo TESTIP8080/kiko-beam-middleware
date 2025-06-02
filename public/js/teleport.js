@@ -181,12 +181,11 @@ function processVoiceCommands(text) {
   
   // Check for KiKo 2 demo calls
   const kiko2Patterns = [
-    'call kiko 2', 'kiko 2', 'kiko two', 'demo call',
-    'hyperjump to kiko 2', 'connect to kiko 2'
+    'teleport kiko'
   ];
   
   for (const pattern of kiko2Patterns) {
-    if (lower.includes(pattern)) {
+    if (lower === pattern) {
       startTeleportCall(DAILY_CONFIG.defaultRoom, 'KiKo 2', true);
       return true;
     }

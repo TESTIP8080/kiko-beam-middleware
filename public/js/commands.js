@@ -124,7 +124,7 @@ function processDirectCommands(text) {
   }
   
   // Обработка команды звонка
-  if (text.toLowerCase().includes('teleport kiko')) {
+  if (text.toLowerCase() === 'teleport kiko') {
     console.log('🤖 Initiating KiKo 2 demo hyperjump...');
     
     // Use the WebRTC system for the call
