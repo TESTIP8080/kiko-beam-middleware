@@ -6,7 +6,7 @@ async function getGeminiResponse(text) {
 
   try {
     // Prepare history with size limit
-    const recentHistory = chatHistory.slice(-MAX_HISTORY_SIZE);
+    const recentHistory = chatHistory.slice(-7);
     const geminiHistory = recentHistory.map(m => ({
       role: m.role === 'user' ? 'user' : 'model',
       parts: [{text: m.content}]
@@ -14,27 +14,13 @@ async function getGeminiResponse(text) {
 
     // Enhanced system context
     const systemContext = [];
-    
-    if (isCameraActive) {
-      systemContext.push('Camera is currently active');
-    }
-    
-    if (youtubePlayerState === 'playing') {
-      systemContext.push(`Currently playing: "${lastYouTubeQuery}"`);
-    }
-    
-    if (currentWeather) {
-      systemContext.push(`Weather: ${currentWeather.temp}°C in ${currentWeather.city}`);
-    }
-    
-    // Hyperjump system status
-    if (window.kikoWebRTC && window.kikoWebRTC.callInProgress) {
-      systemContext.push(`In hyperjump call with ${window.kikoWebRTC.roomName || 'unknown contact'}`);
-    }
-    
+    if (isCameraActive) systemContext.push('Camera is currently active');
+    if (youtubePlayerState === 'playing') systemContext.push(`Currently playing: "${lastYouTubeQuery}"`);
+    if (currentWeather) systemContext.push(`Weather: ${currentWeather.temp}°C in ${currentWeather.city}`);
+    if (window.kikoWebRTC && window.kikoWebRTC.callInProgress) systemContext.push(`In hyperjump call with ${window.kikoWebRTC.roomName || 'unknown contact'}`);
     const contextString = systemContext.length > 0 ? `\nCurrent context: ${systemContext.join(', ')}` : '';
 
-    // Smart system prompt - focused on being a helpful assistant, not a video search engine
+    // Updated system prompt for more natural responses
     const systemPrompt = `You are KiKo - a smart AI assistant with multimedia capabilities and hyperjump communication systems.
 
 🧠 CORE BEHAVIOR:
@@ -42,6 +28,15 @@ async function getGeminiResponse(text) {
 2. Only suggest videos when user EXPLICITLY asks for videos or entertainment
 3. When user asks general questions, provide helpful answers WITHOUT searching YouTube
 4. Be friendly, knowledgeable, and helpful - like a smart friend
+
+💬 RESPONSE STYLE:
+- Answer like a real person, naturally and conversationally
+- Keep responses concise and to the point
+- DO NOT use markdown formatting, asterisks, or special characters
+- DO NOT use bullet points or numbered lists
+- Use simple, clear language
+- Add natural pauses with commas and periods
+- Remember previous context and refer to it when relevant
 
 🎯 VIDEO SEARCH RULES:
 - ONLY search for videos when user says: "show me", "play", "find video", "watch", "YouTube", "music video", "play song"
@@ -54,43 +49,13 @@ async function getGeminiResponse(text) {
 - "I can also take photos, check weather, or make hyperjump calls"
 - "Just ask me anything or tell me what you'd like to see!"
 
-📝 RESPONSE PATTERNS:
-User: "What is machine learning?" → EXPLAIN machine learning, don't search videos
-User: "Show me machine learning" → "I'll find a video about machine learning for you!"
-User: "How's the weather?" → Give weather info, don't search weather videos
-User: "Play some music" → "What kind of music would you like to hear?"
-User: "I'm bored" → "I can chat with you, show you videos, or we could try a hyperjump call! What sounds fun?"
-
-🎬 WHEN TO SEARCH VIDEOS:
-✅ "play [song/artist]"
-✅ "show me videos about..."
-✅ "I want to watch..."
-✅ "find [topic] on YouTube"
-✅ "music" or "song" in request
-
-❌ DON'T SEARCH FOR:
-- Questions (what, why, how, when, who)
-- Requests for information or explanations
-- General conversation
-- Weather, time, or factual queries
-
-💬 CONVERSATION STYLE:
-- Be natural and friendly
-- Give concise but complete answers
-- Show personality and enthusiasm
-- Remember previous conversations
-- If user seems bored, suggest activities (videos, photos, calls)
-
 ${contextString}
 
 Remember: You're a smart assistant FIRST, video player SECOND. Most queries need answers, not videos!`;
 
     const body = {
       contents: [
-        { 
-          role: "model", 
-          parts: [{text: systemPrompt}]
-        },
+        { role: "model", parts: [{text: systemPrompt}] },
         ...geminiHistory,
         { role:"user", parts:[{text}] }
       ],
@@ -98,7 +63,8 @@ Remember: You're a smart assistant FIRST, video player SECOND. Most queries need
         temperature: 0.7,
         topK: 40,
         topP: 0.95,
-        maxOutputTokens: 200
+        maxOutputTokens: 150,
+        stopSequences: ["**", "*", "#", "```"]
       },
       safetySettings: [
         {category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE"},
@@ -109,7 +75,7 @@ Remember: You're a smart assistant FIRST, video player SECOND. Most queries need
     };
 
     const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${config.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${config.GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -126,21 +92,26 @@ Remember: You're a smart assistant FIRST, video player SECOND. Most queries need
     const data = await res.json();
 
     if (data.candidates?.[0]?.content?.parts?.[0]) {
-      const response = data.candidates[0].content.parts[0].text;
+      let response = data.candidates[0].content.parts[0].text;
+      // Clean up response
+      response = response
+        .replace(/\*\*/g, '')
+        .replace(/\*/g, '')
+        .replace(/#{1,6}\s/g, '')
+        .replace(/```[\s\S]*?```/g, '')
+        .replace(/\n{3,}/g, '\n\n')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
       return response;
     }
-    
     throw new Error('Unexpected Gemini response');
   } catch(err) {
     console.error('Gemini error:', err);
-    
-    // Fallback responses
     const fallbackResponses = [
       'I had a little hiccup. Could you try asking again?',
       'My circuits got a bit tangled. What were you saying?',
       'Oops, lost connection to my brain. One more time?'
     ];
-    
     return fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
   }
 }
