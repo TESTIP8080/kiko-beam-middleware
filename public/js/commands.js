@@ -145,17 +145,10 @@ function processDirectCommands(text) {
 function processHyperjumpCommands(text) {
   const lower = text.toLowerCase();
   
-  // Direct KiKo 2 calls
-  const kiko2Patterns = [
-    'teleport kiko', 'kiko', 'hyperjump to kiko', 
-    'connect to kiko', 'demo call', 'test call'
-  ];
-  
-  for (const pattern of kiko2Patterns) {
-    if (lower.includes(pattern)) {
-      startTeleportCall(DAILY_CONFIG.defaultRoom, 'KiKo 2', true);
-      return true;
-    }
+  // Direct KiKo 2 calls - only exact match
+  if (lower === 'teleport kiko') {
+    startTeleportCall(DAILY_CONFIG.defaultRoom, 'KiKo 2', true);
+    return true;
   }
   
   // Generic call commands
